@@ -1,0 +1,406 @@
+[
+  [{
+      "type": "1",
+      "question": "2017年，北京边上再起深圳，白洋淀里画了一个圈。全国人民都想去那里买房，你知道是哪里吗？",
+      "options": [{
+          "answer": "雄安新区",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "朝阳区",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "天安门",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "1",
+      "question": "2017年，美国鲤鱼，德国大闸蟹，丹麦生蚝，澳大利亚龙虾、兔子均泛滥成灾。网友们热评应该以哪种方式去解决？",
+      "options": [{
+          "answer": "放下屠刀，立地成佛",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "中国吃货肩负着拯救世界使命",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "灾害生物，需要根除！",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "1",
+      "question": "说要争取让自己家员工都享受两房一厅待遇的企业家是谁？",
+      "options": [{
+          "answer": "马云",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "刘强东",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "董明珠",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "1",
+      "question": "监狱内：小伙制造假币被抓，民警问其为何制造假币？小伙原话说了什么？",
+      "options": [{
+          "answer": "生活窘迫，无奈之举",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "做不出来真币",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "投机取巧，觉得自己做的比真币好",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "1",
+      "question": "早恋青年男女遭到家长反对后，誓死要用生命的力量在一起，那么，他们用什么将手粘在了一起？",
+      "options": [{
+          "answer": "玻璃胶",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "502",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "固体胶",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    }
+  ],
+  [{
+      "type": "2",
+      "question": "以下影视作品与剧中角色哪些是正确匹配？",
+      "options": [{
+          "answer": "《摔跤吧！爸爸》阿米尔汗",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "《战狼》吴京",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "《前半生》罗子君",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "《欢乐颂》安迪",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "《人民的名义》达康书记",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "2",
+      "question": "2017年娱乐圈狗血大事件中，有哪几个事件是在微博上得到实锤的呢？",
+      "options": [{
+          "answer": "李雨桐炮轰薛之谦",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "白百何陈羽凡离婚",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "奚梦瑶维密秀摔跤",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "周杰林心如互撕",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "王俊凯高考落榜",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "2",
+      "question": "2017年带给我们伤痛的事件，有哪些是由于人为因素造成的？",
+      "options": [{
+          "answer": "四川九寨沟7.0级地震",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "宁波雅戈尔动物园老虎咬人案",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "杭州豪宅保姆纵火案",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "八达岭动物园老虎伤人事件",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "四川茂县山体滑坡事件",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "2",
+      "question": "2017年，举办了双十一购物节的商家有哪些？",
+      "options": [{
+          "answer": "淘宝",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "天猫",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "京东",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "唯品会",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "万年历",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "2",
+      "question": "爸爸去哪儿第5季，有以下哪几对父子/父女？",
+      "options": [{
+          "answer": "吴镇宇——费曼",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "林志颖——Kimi",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "杜江——嗯哼",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "刘畊宏——泡芙",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "陈小春——Jasper",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    }
+  ],
+  [{
+      "type": "3",
+      "question": "2017年，台湾同性婚姻合法化。",
+      "options": [{
+          "answer": "√",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "×",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "3",
+      "question": "孩子在幼儿园不听话，老师就该用针扎。",
+      "options": [{
+          "answer": "√",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "×",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "3",
+      "question": "80岁老太往飞机发动机扔硬币祈福，是为了飞行顺利祈福，所以大家应该向她学习。",
+      "options": [{
+          "answer": "√",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "×",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "3",
+      "question": "《王者荣耀》是一个专门供小学生娱乐的游戏。",
+      "options": [{
+          "answer": "√",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "×",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "3",
+      "question": "目前我国已进入全民二胎大环境，所以女性必须生第二胎。",
+      "options": [{
+          "answer": "√",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "×",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    }
+  ],
+  [{
+      "type": "4",
+      "question": "2017年4月，一醉酒驾驶司机为躲酒精测试，见逃跑无望，为了拖延时间路边拔草吃，一片草都被他吃光。\n结合全文，司机为什么要吃草？",
+      "options": [{
+          "answer": "因为司机属羊",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为酒精测试前需要吃草",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为司机想躲避酒精测试",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "因为警察要求司机吃草",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "4",
+      "question": "2017年6月，湖南怀化市一女子造谣称，单身汉可到县政府填表申请老婆。随后女子因在微信群里造谣传谣被公安机关依法行政拘留10日。\n结合全文，女子为什么被拘留？",
+      "options": [{
+          "answer": "因为老婆太少了",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为单身汉太多了",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为女子造谣传谣",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "因为县政府提供不了老婆",
+          "correct": false,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "4",
+      "question": "2017年5月，广西柳州一男子网上招嫖嫖到妻子，对方开价1小时100元，男子当场气愤不已，但想到自己心里还是很爱老婆，他决定不计前嫌，恳请民警帮忙劝说其老婆回归家庭。\n结合全文，男子为什么气愤？",
+      "options": [{
+          "answer": "因为对方开价1小时100元太贵了",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为突然发现自己很爱老婆",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为自己上网招嫖被发现了",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为发现自己的头发变绿了",
+          "correct": true,
+          "isActive": false
+        }
+      ]
+    }
+  ]
+]
