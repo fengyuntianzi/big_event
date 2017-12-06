@@ -4,7 +4,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-	userName: ''
+	userName: '',
+	userScore: 0
 }
 
 export default new Vuex.Store({

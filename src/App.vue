@@ -20,6 +20,10 @@ export default {
 html,body {
 	font-family: 'PingFangSC',"苹方-简", "Helvetica Neue", "Helvetica", "STHeitiSC-Light", "Arial", sans-serif;
 }
+@font-face {
+	font-family: 'tx';
+	src: url('../static/font/tx.ttf');
+}
 #app {
 	width: 100%;
 	height: 100%;

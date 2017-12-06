@@ -42,22 +42,4 @@ export default {
 			transform translateX(800px)
 		&.roundShow-leave-active
 			transform translateX(-500px)
-		// &.active
-		// 	transform translateX(100px)
-		// 	transition all 2s linear
-	// .roundIn-enter-avtive
-	// 	animation: roundShow 2s;	
-	// .roundIn-leave-avtive
-	// 	animation: roundShow 2s reverse;
-	// 	@keyframes roundShow {
-	// 		0% {
-	// 			transform rotate(45deg)
-	// 		}
-	// 		50% {
-	// 			transform rotate(180deg)
-	// 		}
-	// 		100% {
-	// 			transform rotate(45deg)
-	// 		}
-	// 	}
 </style>

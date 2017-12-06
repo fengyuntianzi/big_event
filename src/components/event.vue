@@ -1,10 +1,10 @@
 <template>
 	<div class="event">
 		<div class="music">
-			<audio src="../assets/music.mp3" autoplay></audio>
+			<audio src="../assets/music.mp3" autoplay="autoplay" ref="audio" id='audio'></audio>
 		</div>
 		<div class="type-logo" v-show="showLogo">{{logoTxt}}</div>
-		<div class='index-section' v-show="section === 'index'">
+		<div class='index-section' v-show="section === 0">
 			<div class="index-content">
 				<h2 class="title">2017大事件全国统一考卷</h2>
 				<h1 class="desc">年底大考核，全对算你赢！</h1>
@@ -19,27 +19,27 @@
 			</div>
 		</div>
 		
-		<div class='round1-section temp-round' v-show="section === 'round1'">
+		<div class='round1-section temp-round' v-show="section === 1">
 			<round :round="1" :title="'小试牛刀'" v-show="!showQuestion" class='round'/>
-			<question1 :questions="questions[0]" v-show="showQuestion"></question1>
+			<question :type='1' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
 		
-		<div class='round2-section temp-round' v-show="section === 'round2'">
+		<div class='round2-section temp-round' v-show="section === 2">
 			<round :round="2" :title="'知微见著'" v-show="!showQuestion" class='round'/>
-			<!-- <question :type='2' v-show="showQuestion"></question> -->
+			<question :type='2' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
-		<div class='round3-section temp-round' v-show="section === 'round3'">
+		<div class='round3-section temp-round' v-show="section === 3">
 			<round :round="3" :title="'明察秋毫'" v-show="!showQuestion" class='round'/>
-			<!-- <question :type='3' v-show="showQuestion"></question> -->
+			<question :type='3' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
-		<div class='round4-section temp-round' v-show="section === 'round4'">
+		<div class='round4-section temp-round' v-show="section === 4">
 			<round :round="4" :title="'炉火纯青'" v-show="!showQuestion" class='round'/>
-			<!-- <question :type='4' v-show="showQuestion"></question> -->
+			<question :type='4' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
 
-		<div class='result-section' v-show="section === 'result'"></div>
+		<div class='result-section' v-show="section === 5"></div>
 
-		<div class="bottom-section" v-show="section!=='index' && section!=='result'">
+		<div class="bottom-section" v-show="section!==0 && section!==5">
 			<div class="pencil" :style="{ 'margin-left' : left }"></div>
 			<div class="line"></div>
 		</div>
@@ -50,26 +50,17 @@
 <script>
 import store from '../store/store'
 import round from './round.vue'
-import question1 from './question1.vue'
+import question from './question.vue'
 import questions from '../common/question.json'
-// questions.forEach((item) => {
-// 	// console.log(item)
-// 	item.forEach((optionItem) => {
-// 		// console.log(optionItem.options)
-// 		optionItem.options.forEach(ele => {
-// 			ele.isActive = false
-// 		})
-// 	})
-// });
+
 export default {
 	data () {
 		return {
-			section: 'index',
+			section: 0,
 			userName: '',
 			inputName: '',
 			left: '0',
 			showLogo: false,
-			logoTxt: '单选题',
 			showQuestion: true,
 			questions: questions
 		}
@@ -78,7 +69,7 @@ export default {
 	questions,
 	components: {
 		round,
-		question1
+		question
 	},
 	props: {
 
@@ -93,7 +84,28 @@ export default {
 			}
 		}, 500)
 	},
+	mounted () {
+		// document.getElementById('audio').play()
+	},
 	methods: {
+		changeSection (data) {
+			console.log(data)
+			if (this.section === 4) {
+				this.section += 1
+			}
+			else {
+				this.section += 1
+				this.showLogo = true
+				setTimeout(() => {
+					this.left = '15%'
+				}, 500)
+				this.showQuestion = false
+				setTimeout(() => {
+					this.showQuestion = true
+					this.showLogo = false
+				}, 3000);
+			}
+		},
 		enter () {
 			if (this.inputName === '') {
 				this.$vux.toast.show({
@@ -104,7 +116,7 @@ export default {
 				})
 				return
 			}
-			this.section = 'round1'
+			this.section = 1
 			this.showLogo = true
 			setTimeout(() => {
 				this.left = '5%'
@@ -117,6 +129,10 @@ export default {
 		}
 	},
 	computed: {
+		logoTxt () {
+			let arr = ['单选题', '多选题', '判断题', '阅读题']
+			return arr[this.section - 1]
+		}
 	},
 	watch: {
 		inputName: (val) => {
