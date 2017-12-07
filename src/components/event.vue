@@ -1,46 +1,56 @@
 <template>
 	<div class="event">
-		<div class="music">
-			<audio src="../assets/music.mp3" autoplay="autoplay" ref="audio" id='audio'></audio>
+		<!-- <div class="music" id='music' ref="music">
+			<audio src="../assets/Synthion.mp3" autoplay="autoplay"></audio>
+		</div> -->
+		<div class="type-logo" v-show="showLogo">
+			<div class="logo-txt">{{logoTxt}}</div>
 		</div>
-		<div class="type-logo" v-show="showLogo">{{logoTxt}}</div>
+		<div class="index-logo" v-show="section === 0">
+			<img  src="../assets/images/index-tag.png" width="166" height="69">
+			<div class="index-copytight">
+				<div>出品方：</div><img src="../assets/logo.png" alt="" width="29" height="29"><div>万年历</div>
+			</div>
+		</div>
 		<div class='index-section' v-show="section === 0">
 			<div class="index-content">
-				<h2 class="title">2017大事件全国统一考卷</h2>
-				<h1 class="desc">年底大考核，全对算你赢！</h1>
+				<img class="title" src="../assets/images/index-title.png">
+				<!-- <img class="title" src="../assets/images/index-title.png"> -->
 				<div class="paper-info">
-					<div class="set-paper">出卷人：万年历</div>
 					<div class="get-paper">
-						<div>答卷人：</div>
+						<div>答卷人:</div>
 						<input type="text" class="name" v-model="inputName" ref="name" placeholder="请输入你的名字">
 					</div>
 				</div>
-				<div class="begin" @click="enter">进入</div>
+				<div class="begin" @click="enter" :class="{active : enterClicked}">进入</div>
 			</div>
 		</div>
 		
 		<div class='round1-section temp-round' v-show="section === 1">
-			<round :round="1" :title="'小试牛刀'" v-show="!showQuestion" class='round'/>
+			<round :round="1" :title="'小试牛刀'" v-show="!showQuestion" class='nowround'/>
 			<question :type='1' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
 		
 		<div class='round2-section temp-round' v-show="section === 2">
-			<round :round="2" :title="'知微见著'" v-show="!showQuestion" class='round'/>
+			<round :round="2" :title="'知微见著'" v-show="!showQuestion" class='nowround'/>
 			<question :type='2' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
 		<div class='round3-section temp-round' v-show="section === 3">
-			<round :round="3" :title="'明察秋毫'" v-show="!showQuestion" class='round'/>
+			<round :round="3" :title="'明察秋毫'" v-show="!showQuestion" class='nowround'/>
 			<question :type='3' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
 		<div class='round4-section temp-round' v-show="section === 4">
-			<round :round="4" :title="'炉火纯青'" v-show="!showQuestion" class='round'/>
+			<round :round="4" :title="'炉火纯青'" v-show="!showQuestion" class='nowround'/>
 			<question :type='4' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
 
 		<div class='result-section' v-show="section === 5"></div>
 
-		<div class="bottom-section" v-show="section!==0 && section!==5">
-			<div class="pencil" :style="{ 'margin-left' : left }"></div>
+		<div class="bottom-section" v-show="section!==0 && section!==5 && !showQuestion">
+			<div class="circle-list">
+				<div v-for="(item, index) in questions" class="circle" :id="'circle_' + (index+1)"></div>
+			</div>
+			<div class="activecircle" id="activecircle" :style="{'left' : circleLeft}"></div>
 			<div class="line"></div>
 		</div>
 
@@ -56,13 +66,15 @@ import questions from '../common/question.json'
 export default {
 	data () {
 		return {
-			section: 0,
+			section: 3,
 			userName: '',
 			inputName: '',
-			left: '0',
 			showLogo: false,
 			showQuestion: true,
-			questions: questions
+			questions: questions,
+			enterClicked: false,
+			circleLeft: '0px',
+			distance: 0
 		}
 	},
 	store,
@@ -85,7 +97,8 @@ export default {
 		}, 500)
 	},
 	mounted () {
-		// document.getElementById('audio').play()
+		// let dom = this.$refs.music
+		// console.log(window.getComputedStyle(dom).top)
 	},
 	methods: {
 		changeSection (data) {
@@ -96,10 +109,11 @@ export default {
 			else {
 				this.section += 1
 				this.showLogo = true
-				setTimeout(() => {
-					this.left = '15%'
-				}, 500)
 				this.showQuestion = false
+				setTimeout(() => {
+					let that = this
+					that.circleLeft = (parseInt(that.circleLeft.replace('px', '')) + that.distance) + 'px'
+				}, 200);
 				setTimeout(() => {
 					this.showQuestion = true
 					this.showLogo = false
@@ -116,11 +130,20 @@ export default {
 				})
 				return
 			}
-			this.section = 1
-			this.showLogo = true
+			this.enterClicked = true
 			setTimeout(() => {
-				this.left = '5%'
-			}, 500)
+				this.section = 1
+				this.showLogo = true
+				this.$nextTick(() => {
+					let that = this
+					let circle1 = document.getElementById('circle_1')
+					let circle2 = document.getElementById('circle_2')
+					let activecircle = document.getElementById('activecircle')
+					that.distance = circle2.getBoundingClientRect().x - circle1.getBoundingClientRect().x
+					console.log('间距:' + that.distance)
+					that.circleLeft = (circle1.getBoundingClientRect().x - activecircle.getBoundingClientRect().x) + 'px'
+				})
+			}, 200)
 			this.showQuestion = false
 			setTimeout(() => {
 				this.showQuestion = true
@@ -145,9 +168,10 @@ export default {
 @import '../common/stylus/base.styl';
 	.event
 		width 100%;
-		height 100%;
+		min-height 100%;
+		overflow auto
 		position relative
-		background-color #1902
+		background-color #ffdb12
 		.music
 			position absolute
 			top 20px
@@ -155,7 +179,7 @@ export default {
 			width 35px
 			height 35px
 			z-index 100
-			background url('../assets/music.png') center no-repeat
+			background url('../assets/images/music.png') center no-repeat
 			background-size cover
 			animation rotate 3s cubic-bezier(.62,1.39,.39,-0.24) infinite
 			@keyframes rotate
@@ -166,13 +190,20 @@ export default {
 					transform rotate(360deg)
 				}
 		.type-logo
-			width 100px
-			height 40px
-			border 5px solid #486
+			width 131px
+			height 69px
+			background url('../assets/images/type-tag.png') center no-repeat
+			background-size 100%
 			position absolute
-			top 0
-			right 50px
+			top -20px
+			right 20px
 			animation bounceInDown 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards
+			.logo-txt
+				position absolute
+				bottom 14px
+				left 25%
+				font-size 20.35px
+				letter-spacing 5.3px
 			@keyframes bounceInDown {
 				0% {
 					transform: translate3d(0, -3000px, 0);
@@ -190,78 +221,117 @@ export default {
 					transform: translate3d(0, 0, 0);
 				}
 			}
-		// .index-section, .result-section, .temp-round
-		// 	width 100%
-		// 	height 100%
+		.index-logo
+			position absolute
+			top -12px
+			right 16.5px
+			.index-copytight
+				display flex
+				align-items center
+				position absolute
+				top 30px
+				left 10px
 		.index-section
 			width 100%
 			min-height 100%
-			// padding 70px 20px 0
 			position relative
-			background-color #eee
 			.index-content
-				margin 0 20px 0
-				padding-top 70px
+				margin 0 17px 0 19px
+				padding-top 51.5px
 				.title
-					margin 0 0 50px
-					font-size 18px
-					text-align center
+					width 100%
+					height calc((100vw - 36px) * 0.6430678466076696)
 				.desc
 					font-size 30px
 					line-height 1.29
 					font-weight 700
 					text-align justify
 				.paper-info 
-					margin-top 80px
+					margin-top 30px
 					.get-paper
 						display flex
 						align-items baseline
+						justify-content center
 						flex-wrap nowrap
-						margin 20px 0 50px
+						font-size 18px
+						margin-bottom 11.5px
+						color #000
 						input
-							// vertical-align top
+							width 50%
 							outline 0
+							margin-left 7px
 							border-bottom 1px solid #333
 							border-radius 0
 							background-color transparent
+							&::-webkit-input-placeholder
+								color #d5ba01
 				.begin
-					width 70px
-					height 30px
-					line-height 30px
+					width 257px
+					height 74px
+					background url('../assets/images/enter.png') center no-repeat
+					background-size 100%
+					line-height 50px
+					letter-spacing 5px
 					margin 0 auto
-					border 1px solid #444
-					border-radius 15px
+					font-size 24px
 					text-align center
+					&.active 
+						background url('../assets/images/enter-after.png') center no-repeat
+						background-size 100%
 		.temp-round
-			padding-top 90px
-			margin 0 20px 30px
-			.round
+			padding-top 13.5px
+			margin 0 2px 0
+			.nowround
 				position absolute
 				
 		.bottom-section
-			padding-top 50px
-			.pencil
-				display inline-block
-				// margin-left 0
-				width 35px
-				height 35px
-				background url('../assets/pencil.png') center no-repeat
-				background-size cover
-				margin-bottom 5px
+			width calc(100% - 76px)
+			position absolute
+			bottom 60px
+			margin 0 38px
+			// .pencil
+			// 	display inline-block
+			// 	width 35px
+			// 	height 35px
+			// 	background url('../assets/images/pencil.png') center no-repeat
+			// 	background-size cover
+			// 	margin-bottom 5px
+			// 	transition all .8s linear
+			// 	animation shake 1s linear infinite
+			// 	@keyframes shake {
+			// 		0% {
+			// 			transform rotate(-30deg)
+			// 		}
+			// 		50% {
+			// 			transform rotate(-10deg)
+			// 		}
+			// 		100% {
+			// 			transform rotate(-30deg)
+			// 		}
+			// 	}
+			.activecircle
+				width 12.5px
+				height 12.5px
+				background-color #ff8f45
+				border: solid 2px #000
+				border-radius 50%
+				position absolute
+				top 0
+				left 0
 				transition all .8s linear
-				animation shake 1s linear infinite
-				@keyframes shake {
-					0% {
-						transform rotate(-30deg)
-					}
-					50% {
-						transform rotate(-10deg)
-					}
-					100% {
-						transform rotate(-30deg)
-					}
-				}
+			.circle-list
+				display flex
+				justify-content space-around
+				margin-bottom -9px
+				.circle
+					width 12.5px
+					height 12.5px
+					background-color #ffffff
+					border: solid 2px #000000
+					border-radius 50%
+					&.active
+						background-color #ff8f45
 			.line
-				border-1px(#333)
+				border: solid 1px #000000
 
 </style>

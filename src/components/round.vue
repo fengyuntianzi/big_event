@@ -1,10 +1,10 @@
 <template>
-	<transition name="roundShow">
+	<!-- <transition name="roundShow"> -->
 		<div class="round">
 			<h1>round{{round}}</h1>
 			<h2>{{title}}</h2>
 		</div>
-	</transition>
+	<!-- </transition> -->
 </template>
 <script>
 export default {
