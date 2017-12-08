@@ -4,8 +4,8 @@
 			<div v-for="(item, index) in nowQuestion" v-if="index === nowIndex" class="item" :key="index">
 				<div class="title">
 					<!-- <img src="../assets/images/radio-paper.png" alt="" class="paper"> -->
-					<div class="paper" :class="{multipaper : type===2}"></div>
-					<div class="subject" :class="{multipaper : type===2, judge : type===3}">{{item.question}}</div>
+					<div class="paper" :class="{multipaper : type===2, read : type === 4}"></div>
+					<div class="subject" :class="{multipaper : type===2, judge : type===3, read : type === 4}">{{item.question}}</div>
 				</div>
 				<div class="option-section">
 					<div v-for="(optionItem,optionIndex) in item.options" class='option' 
@@ -16,14 +16,17 @@
 							{{type === 3 ? '' : optionItem.answer}}</div>
 					</div>
 				</div>
-				<div class="confirm" @click="confirm" v-show="type === 2">确认</div>
+				<div class="confirm" v-show="type === 2 || (type === 4 && nowIndex===maxIndex)">
+					<div @click="confirm" class="sure" :class="{scale : clickedConfirm}">{{(type === 4 && nowIndex===maxIndex) ? '交卷':'确认'}}</div>
+					<img src="../assets/images/pencil.png" width="30" height="30" @click="confirm" 
+						:class="{scale : clickedConfirm}">
+				</div>
 			</div>
 		</transition-group>
 	</div>
 </template>
 <script>
-import store from '../store/store'
-/*eslint-disable no-unused-vars*/
+// import store from '../store/store'
 const RadioScore = 4
 const MultiScore = 6
 const JudgeScore = 4
@@ -35,13 +38,14 @@ export default {
 			maxIndex: 0,
 			nowQuestion: [],
 			multiselect: [],
-			optionClick: false
+			optionClick: false,
+			clickedConfirm: false
 		}
 	},
 	components: {
 
 	},
-	store,
+	// store,
 	props: {
 		questions: {
 			type: Array,
@@ -62,16 +66,29 @@ export default {
 		// }
 	},
 	methods: {
+		/**
+		 * 返回当前问题的正确答案
+		 * @returns {Array}
+		*/
 		correctAnswer () {
 			return this.nowQuestion[this.nowIndex].options.filter((item) => {
 				return item.correct === true
 			})
 		},
+		/**
+		 * 返回当前问题的已选择答案
+		 * @returns {Array}
+		*/
 		selectAnswer () {
 			return this.nowQuestion[this.nowIndex].options.filter((item) => {
 				return item.isActive === true
 			})
 		},
+		/**
+		 * 将当前序号改成选项值
+		 * @param {int} num 当前序号
+		 * @returns {String}  当前序号对应选项
+		*/
 		changeToOption (num) {
 			let arr
 			if (this.type === 3) {
@@ -82,7 +99,13 @@ export default {
 			}
 			return arr[num]
 		},
+		/**
+		 * 多选题--确认、交卷
+		*/
 		confirm () {
+			setTimeout(() => {
+				this.clickedConfirm = true
+			}, 200);
 			if (this.selectAnswer().length < 1) {
 				this.$vux.toast.show({
 					type: 'text',
@@ -90,18 +113,33 @@ export default {
 					position: 'bottom',
 					time: 1000
 				})
+				setTimeout(() => {
+					this.clickedConfirm = false
+				}, 200)
 				return
 			}
 			else {
-				if (this.correctAnswer().toString() === this.selectAnswer().toString()) {
-					this.$store.state.userScore += MultiScore
-					console.log('当前分数' + this.$store.state.userScore)
+				if (this.type === 4) {
+					console.log('交卷')
 				}
-				this.changeIndex()
+				else {
+					if (this.correctAnswer().toString() === this.selectAnswer().toString()) {
+						this.$store.state.userScore += MultiScore
+						console.log('当前分数' + this.$store.state.userScore)
+					}
+				}
+				setTimeout(() => {
+					this.changeIndex()
+				}, 200)
 			}
 			console.log(this.correctAnswer().toString())
 			console.log(this.selectAnswer().toString())
 		},
+		/**
+		 * select()选择答案
+		 * @param {int} num1 当前问题的序号
+		 * @param {int} num2 当前问题对应选项的序号
+		*/
 		select (num1, num2) {
 			let option = this.nowQuestion[num1].options[num2]
 			// 多选题
@@ -110,6 +148,10 @@ export default {
 			}
 			// 单选题
 			else {
+				if (this.radioOptionSelected) {
+					return
+				}
+				this.radioOptionSelected = true
 				option.isActive = true
 				if (option.correct) {
 					if (this.type === 1) {
@@ -125,13 +167,23 @@ export default {
 				console.log(option.answer)
 				console.log('当前分数：' + this.$store.state.userScore)
 				console.log('当前选择题目索引：' + this.nowIndex)
+				if (this.type === 4 && this.nowIndex === this.maxIndex) {
+					return
+				}
 				this.changeIndex()
 			}
 		},
+		/**
+		 * 改变当前问题的序号
+		*/
 		changeIndex () {
+			setTimeout(() => {
+				this.clickedConfirm = false
+			}, 200)
 			if (this.nowIndex < this.maxIndex) {
 				setTimeout(() => {
 					this.nowIndex = this.nowIndex + 1
+					this.radioOptionSelected = false
 				}, 500);
 			}
 			else {
@@ -156,7 +208,7 @@ export default {
 			.title
 				position relative
 				font-size 17px
-				color #333
+				color #000
 				margin-bottom 15px
 				font-family 'tx'
 				.paper
@@ -168,6 +220,10 @@ export default {
 						height calc((100vw - 4px) * 0.5273224043715847)
 						background url("../assets/images/small-paper.png") center no-repeat
 						background-size 100%
+					&.read
+						height calc((100vw - 4px) * 0.8324324324324324)
+						background url("../assets/images/multi-paper.png") center no-repeat
+						background-size 100%
 				.subject
 					position absolute
 					top 58px
@@ -178,13 +234,15 @@ export default {
 					letter-spacing 0.5px
 					&.multipaper
 						top 42px
-						font-size 23px
+						font-size 21px
 					&.judge
 						top 90px
+					&.read
+						font-size 19px
 			.option-section
-				margin -15px 40px 0 39px
+				margin -20px 40px 0 39px
 				.option
-					margin-bottom 10px
+					margin-bottom 2px
 					display flex
 					align-items center
 					justify-content flex-start
@@ -204,10 +262,12 @@ export default {
 						background url('../assets/images/small-frame-after.png') center no-repeat
 						background-size 100%
 					.select
-						margin 0 13px 10px 15px
+						margin 0 8px 10px 15px
 						font-size 33px
 					.answer
 						margin-bottom 10px
+						margin-right 10px
+						font-size 20px
 						&.correct
 							width 53px
 							height 41px
@@ -220,21 +280,30 @@ export default {
 							background-size 100%
 					&.short
 						.select
-							margin-left 26%
+							margin-left 33%
+							margin-right 13px
 						.answer
 							font-size 20px
 			.confirm
-				border 1px solid #333
-				border-radius 5px
-				width 75px
-				height 25px
-				margin 15px auto 0
-				text-align center;
-				line-height 25px;
+				display flex
+				justify-content flex-end
+				align-items center
+				font-size 27.25px
+				margin 5px 46.25px 0
+				.sure,img
+					transition all .5s ease
+					&.scale
+						transform scale(.5)
 /* iphone4、5*/
 @media screen and (max-width: 320px)
 	.question .item .title .subject
+		font-size 21px
+	.question .item .title .subject.read,.question .item .title .subject.multipaper
+		font-size 16px !important
+	.question .item .title .subject.judge
 		font-size 20px !important
 	.question .item .option-section .option .answer
 		font-size 18px
+/* iphone6p*/
+// @media screen and (min-width: 400px) and (max-width 420px)
 </style>

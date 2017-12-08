@@ -5,6 +5,7 @@ import store from '../../store/store'
 root.userinfocallback = function (result) {
 	var originalString = Base64.decode(result);
 	var originalAllObj = JSON.parse(originalString);
+	// alert(originalString)
 	// // 设置userid、deviceid
 	// store.commit('setUserInfo', {
 	// 	userId: originalAllObj.native_score.userId,
@@ -12,7 +13,7 @@ root.userinfocallback = function (result) {
 	// })
 	// 设置用户名
 	if(originalAllObj.native_usercenter != undefined || originalAllObj.native_usercenter != null) {
-		store.userName = originalAllObj.native_usercenter.name
+		store.userName = originalAllObj.native_usercenter.name || originalAllObj.native_usercenter.nickname
 	}
 }
 

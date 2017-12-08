@@ -44,29 +44,31 @@
 			<question :type='4' :questions="questions" v-show="showQuestion" v-on:changeSection= 'changeSection'></question>
 		</div>
 
-		<div class='result-section' v-show="section === 5"></div>
+		<div class='result-section' v-show="section === 5">
+			<result v-on:changeToindex = "changeToindex"></result>
+		</div>
 
 		<div class="bottom-section" v-show="section!==0 && section!==5 && !showQuestion">
 			<div class="circle-list">
-				<div v-for="(item, index) in questions" class="circle" :id="'circle_' + (index+1)"></div>
+				<div v-for="(item, index) in questions" class="circle" 
+					:id="'circle_' + (index+1)" :style="{'margin-left' : left}"></div>
 			</div>
-			<div class="activecircle" id="activecircle" :style="{'left' : circleLeft}"></div>
+			<div class="activecircle" id="activecircle" :style="{left : circleLeft}"></div>
 			<div class="line"></div>
 		</div>
 
-		<!-- <toast v-model="showToast" type="text">{{toastText}}</toast> -->
 	</div>
 </template>
 <script>
 import store from '../store/store'
 import round from './round.vue'
 import question from './question.vue'
+import result from './result.vue'
 import questions from '../common/question.json'
-
 export default {
 	data () {
 		return {
-			section: 3,
+			section: 5,
 			userName: '',
 			inputName: '',
 			showLogo: false,
@@ -74,14 +76,14 @@ export default {
 			questions: questions,
 			enterClicked: false,
 			circleLeft: '0px',
-			distance: 0
+			left: (window.innerWidth - 76 - 62.5) / 5 + 'px'
 		}
 	},
 	store,
-	questions,
 	components: {
 		round,
-		question
+		question,
+		result
 	},
 	props: {
 
@@ -99,21 +101,33 @@ export default {
 	mounted () {
 		// let dom = this.$refs.music
 		// console.log(window.getComputedStyle(dom).top)
+		if (this.section === 5) {
+			this.showLogo = true
+		}
 	},
 	methods: {
+		changeToindex () {
+			// this.section = 0
+			// this.questions.forEach((item) => {
+			// 	item.forEach((temp) => {
+			// 		temp.options.forEach((a) => {
+			// 			a.isActive = true
+			// 		})
+			// 	})
+			// })
+		},
 		changeSection (data) {
 			console.log(data)
-			if (this.section === 4) {
-				this.section += 1
+			this.section += 1
+			if (this.section === 5) {
+				this.showLogo = true
 			}
 			else {
-				this.section += 1
 				this.showLogo = true
-				this.showQuestion = false
 				setTimeout(() => {
-					let that = this
-					that.circleLeft = (parseInt(that.circleLeft.replace('px', '')) + that.distance) + 'px'
+					this.moveCircle(this.section)
 				}, 200);
+				this.showQuestion = false
 				setTimeout(() => {
 					this.showQuestion = true
 					this.showLogo = false
@@ -134,26 +148,28 @@ export default {
 			setTimeout(() => {
 				this.section = 1
 				this.showLogo = true
-				this.$nextTick(() => {
-					let that = this
-					let circle1 = document.getElementById('circle_1')
-					let circle2 = document.getElementById('circle_2')
-					let activecircle = document.getElementById('activecircle')
-					that.distance = circle2.getBoundingClientRect().x - circle1.getBoundingClientRect().x
-					console.log('间距:' + that.distance)
-					that.circleLeft = (circle1.getBoundingClientRect().x - activecircle.getBoundingClientRect().x) + 'px'
-				})
+				setTimeout(() => {
+					this.moveCircle(this.section)
+				}, 200);
 			}, 200)
 			this.showQuestion = false
 			setTimeout(() => {
 				this.showQuestion = true
 				this.showLogo = false
 			}, 3000);
+		},
+		moveCircle (index) {
+			if (index === 1) {
+				this.circleLeft = this.left
+			}
+			else {
+				this.circleLeft = (parseInt(this.circleLeft.replace('px', '')) + parseInt(this.left.replace('px', '')) + 12.5 + 4.5) + 'px'
+			}
 		}
 	},
 	computed: {
 		logoTxt () {
-			let arr = ['单选题', '多选题', '判断题', '阅读题']
+			let arr = ['单选题', '多选题', '判断题', '阅读题', '成绩单']
 			return arr[this.section - 1]
 		}
 	},
@@ -201,7 +217,7 @@ export default {
 			.logo-txt
 				position absolute
 				bottom 14px
-				left 25%
+				left 22%
 				font-size 20.35px
 				letter-spacing 5.3px
 			@keyframes bounceInDown {
@@ -289,26 +305,6 @@ export default {
 			position absolute
 			bottom 60px
 			margin 0 38px
-			// .pencil
-			// 	display inline-block
-			// 	width 35px
-			// 	height 35px
-			// 	background url('../assets/images/pencil.png') center no-repeat
-			// 	background-size cover
-			// 	margin-bottom 5px
-			// 	transition all .8s linear
-			// 	animation shake 1s linear infinite
-			// 	@keyframes shake {
-			// 		0% {
-			// 			transform rotate(-30deg)
-			// 		}
-			// 		50% {
-			// 			transform rotate(-10deg)
-			// 		}
-			// 		100% {
-			// 			transform rotate(-30deg)
-			// 		}
-			// 	}
 			.activecircle
 				width 12.5px
 				height 12.5px
@@ -321,7 +317,6 @@ export default {
 				transition all .8s linear
 			.circle-list
 				display flex
-				justify-content space-around
 				margin-bottom -9px
 				.circle
 					width 12.5px
@@ -329,6 +324,7 @@ export default {
 					background-color #ffffff
 					border: solid 2px #000000
 					border-radius 50%
+					// margin-left calc((100vw - 76px - 62.5px) / 5)
 					&.active
 						background-color #ff8f45
 			.line
