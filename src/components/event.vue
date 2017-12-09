@@ -68,7 +68,7 @@ import questions from '../common/question.json'
 export default {
 	data () {
 		return {
-			section: 5,
+			section: 0,
 			userName: '',
 			inputName: '',
 			showLogo: false,
@@ -107,14 +107,22 @@ export default {
 	},
 	methods: {
 		changeToindex () {
-			// this.section = 0
-			// this.questions.forEach((item) => {
-			// 	item.forEach((temp) => {
-			// 		temp.options.forEach((a) => {
-			// 			a.isActive = true
-			// 		})
-			// 	})
-			// })
+			setTimeout(() => {
+				this.section = 0
+				this.showLogo = false
+				this.showQuestion = true
+				this.enterClicked = false
+				this.circleLeft = '0px'
+				this.left = (window.innerWidth - 76 - 62.5) / 5 + 'px'
+			}, 200)
+			this.$store.state.userScore = 0
+			this.questions.forEach((item) => {
+				item.forEach((temp) => {
+					temp.options.forEach((a) => {
+						a.isActive = false
+					})
+				})
+			})
 		},
 		changeSection (data) {
 			console.log(data)
