@@ -4,9 +4,15 @@
 			<div class="score">{{score}}分</div>
 		</div>
 		<div class="desc-wrapper">
-			<div class="desc">{{desc}}</div>
+			<div class="desc" :class="{dobuleline : !(score === 100 || score < 30)}">{{desc}}</div>
 		</div>
-		<img src="../assets/images/as.png" alt="" class="qrcode">
+		<img src="../assets/images/qrcode-0.gif" alt="" class="qrcode" v-show="score >= 0 && score <= 29">
+		<img src="../assets/images/qrcode-30.gif" alt="" class="qrcode" v-show="score >= 30 && score <= 59">
+		<img src="../assets/images/qrcode-60.gif" alt="" class="qrcode" v-show="score >= 60 && score <= 69">
+		<img src="../assets/images/qrcode-70.gif" alt="" class="qrcode" v-show="score >= 70 && score <= 89">
+		<img src="../assets/images/qrcode-90.gif" alt="" class="qrcode" v-show="score >= 90 && score <= 99">
+		<img src="../assets/images/qrcode-100.gif" alt="" class="qrcode" v-show="score === 100">
+		
 		<div class="botton-wrapper">
 			<div class="btn btn1" @click="playAgain" :class="{active : btn1clicked}">{{txt1}}</div>
 			<div class="btn btn2" @click="help" :class="{active : btn2clicked}">{{txt2}}</div>
@@ -37,9 +43,15 @@ export default {
 		playAgain () {
 			this.btn1clicked = true
 			this.$emit('changeToindex')
+			setTimeout(() => {
+				this.btn1clicked = false
+			}, 300);
 		},
 		help () {
 			this.btn2clicked = true
+			setTimeout(() => {
+				this.btn2clicked = false
+			}, 300);
 		}
 	},
 	computed: {
@@ -98,24 +110,29 @@ export default {
 			background-size 100%;
 			.score
 				text-align center
-				margin-left 8%
+				margin-left 5%
 				padding-top 3%
 				font-size 60px
 				letter-spacing 1.5px
 		.desc-wrapper
 			margin 0 auto
 			width 276px
-			height calc(276px * 0.25)
-			background url('../assets/images/message.png') center no-repeat
-			background-size 100%;
+			height 72px
+			background url('../assets/images/duihuak1.png') center no-repeat
+			background-size 100%
 			.desc
 				text-align center
-				padding-top 5%
+				padding 7% 15px 0 15px
 				font-size 19px
 				letter-spacing 0.2px
+				line-height 1.2
+				&.dobuleline
+					text-align justify
+					padding 3% 20px 0 20px
 		.qrcode
 			display block
 			margin 0 auto
+			width 53.6%
 		.botton-wrapper
 			margin-top 10px
 			display flex

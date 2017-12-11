@@ -1,21 +1,35 @@
 <template>
 	<div class="event">
-		<!-- <div class="music" id='music' ref="music">
+		<!-- <div class="music" id='music' ref="music" @click="closeMusic">
 			<audio src="../assets/Synthion.mp3" autoplay="autoplay"></audio>
 		</div> -->
+		<div class="loading" v-show="section === -1">
+			<div class="loading-section">
+				<div class="progress">
+					<div class="pencil" :style="{left : (progress-10) + '%'}"></div>
+					<!-- <div class="inner" :style="{width : progress + '%'}"></div> -->
+				</div>
+				<div class="progress inner" :style="{width : progress + '%'}"></div>
+			</div>
+			<div class="num">{{progress}}<span>%</span></div>
+		</div>
 		<div class="type-logo" v-show="showLogo">
 			<div class="logo-txt">{{logoTxt}}</div>
 		</div>
 		<div class="index-logo" v-show="section === 0">
 			<img  src="../assets/images/index-tag.png" width="166" height="69">
-			<div class="index-copytight">
-				<div>出品方：</div><img src="../assets/logo.png" alt="" width="29" height="29"><div>万年历</div>
+			<div class="index-copyright">
+				<div>出品方:</div>
+				<img src="../assets/images/tubiao.png" alt="" width="29" height="29">
+				<div>万年历</div>
 			</div>
 		</div>
 		<div class='index-section' v-show="section === 0">
 			<div class="index-content">
-				<img class="title" src="../assets/images/index-title.png">
-				<!-- <img class="title" src="../assets/images/index-title.png"> -->
+				<div class="img-content"> 
+					<img class="title" src="../assets/images/index-title.png">
+					<img class="book" src="../assets/images/index-book.gif">
+				</div>
 				<div class="paper-info">
 					<div class="get-paper">
 						<div>答卷人:</div>
@@ -65,11 +79,25 @@ import round from './round.vue'
 import question from './question.vue'
 import result from './result.vue'
 import questions from '../common/question.json'
+// import wnlui from '../common/utils/wnlui.js'
+window.wnlShare.setShareData({
+	title: '接招吧！历友',
+	text: '年底大考核，全对算你赢',
+	image: 'http://www.51wnl.com/wnl_bless/img/write2-myself@3x.png',
+	url: location.href
+})
+// window.wnlShare.showSharePlatform();
+// window.wxShare({
+// 	title: 'title',
+// 	text: 'text',
+// 	imageUrl: 'http://www.51wnl.com/wnl_bless/img/write2-myself@3x.png',
+// 	url: 'http://www.baidu.com'
+// });
 export default {
 	data () {
 		return {
-			section: 0,
-			userName: '',
+			progress: 10,
+			section: -1,
 			inputName: '',
 			showLogo: false,
 			showQuestion: true,
@@ -91,21 +119,41 @@ export default {
 	created () {
 		// 异步获取用户信息
 		setTimeout(() => {
-			this.userName = this.$store.state.userName
-			console.log(this.userName)
-			if (this.userName !== '') {
-				this.inputName = this.userName
+			let name = store.userName
+			if (name !== '') {
+				this.inputName = name
 			}
 		}, 500)
+		// 进度条
+		let interval = setInterval(() => {
+			this.progress += 1
+			if (this.progress === 36) {
+				this.progress = 49
+			}
+			if (this.progress === 56) {
+				this.progress = 70
+			}
+			if (this.progress === 89) {
+				this.progress = 99
+			}
+			if (this.progress >= 100) {
+				clearInterval(interval)
+				setTimeout(() => {
+					this.section = 0
+				}, 300);
+			}
+		}, 70)
 	},
 	mounted () {
-		// let dom = this.$refs.music
-		// console.log(window.getComputedStyle(dom).top)
 		if (this.section === 5) {
 			this.showLogo = true
 		}
 	},
 	methods: {
+		closeMusic (e) {
+			console.log(e.target.style)
+			// console.log(this.$refs.music.style.cssText)
+		},
 		changeToindex () {
 			setTimeout(() => {
 				this.section = 0
@@ -143,7 +191,7 @@ export default {
 			}
 		},
 		enter () {
-			if (this.inputName === '') {
+			if (this.inputName === '' || this.inputName === undefined || this.inputName === 'undefined') {
 				this.$vux.toast.show({
 					type: 'text',
 					text: '请输入名字',
@@ -193,13 +241,65 @@ export default {
 	.event
 		width 100%;
 		min-height 100%;
-		overflow auto
+		// overflow auto
+		overflow-x hidden
 		position relative
 		background-color #ffdb12
+		.loading
+			width 100vw
+			height 100vh
+			background-color #ffffff
+			display flex
+			justify-content center
+			align-items center
+			flex-direction column
+			.loading-section
+				position relative
+				width 60%
+				.progress
+					width 100%
+					height 25px
+					border solid 2.5px #000000
+					border-radius 24px
+					position relative
+					.pencil
+						position absolute
+						top -100px
+						left 0
+						width 58px
+						height 83px
+						background url('../assets/images/qianbi.png') center no-repeat
+						background-size 100%
+						transition all .2s linear
+						animation pencil 1s linear infinite
+						@keyframes pencil {
+							0% {
+								transform rotate(-13deg)
+							}
+							50% {
+								transform rotate(5deg)
+							}
+							100% {
+								transform rotate(-13deg)
+							}
+						}
+					&.inner
+						position absolute
+						top 0
+						left 0
+						background-color #ffde00
+						transition all 0.1s linear
+			.num
+				margin-top 12.5px
+				font-size 27.3px
+				font-family GillSans,'PingFangSC',"\82F9\65B9-\7B80", "Helvetica Neue", "Helvetica", "STHeitiSC-Light", "Arial", sans-serif;
+				letter-spacing -2.2px
+				span 
+					margin-left 2px
 		.music
 			position absolute
 			top 20px
-			right 20px
+			left 20px
 			width 35px
 			height 35px
 			z-index 100
@@ -249,12 +349,15 @@ export default {
 			position absolute
 			top -12px
 			right 16.5px
-			.index-copytight
+			z-index 10
+			.index-copyright
 				display flex
 				align-items center
 				position absolute
 				top 30px
 				left 10px
+				img 
+					margin 0 5px
 		.index-section
 			width 100%
 			min-height 100%
@@ -262,16 +365,23 @@ export default {
 			.index-content
 				margin 0 17px 0 19px
 				padding-top 51.5px
-				.title
-					width 100%
-					height calc((100vw - 36px) * 0.6430678466076696)
+				.img-content
+					position relative
+					.title
+						width 100%
+						height calc((100vw - 36px) * 0.6430678466076696)
+					.book
+						width 90%
+						position absolute
+						top -30px
+						left 10%
 				.desc
 					font-size 30px
 					line-height 1.29
 					font-weight 700
 					text-align justify
 				.paper-info 
-					margin-top 30px
+					margin-top 43%
 					.get-paper
 						display flex
 						align-items baseline
@@ -307,11 +417,10 @@ export default {
 			margin 0 2px 0
 			.nowround
 				position absolute
-				
 		.bottom-section
 			width calc(100% - 76px)
 			position absolute
-			bottom 60px
+			bottom 100px
 			margin 0 38px
 			.activecircle
 				width 12.5px

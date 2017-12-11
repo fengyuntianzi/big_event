@@ -7,18 +7,18 @@
 					<div class="paper" :class="{multipaper : type===2, read : type === 4}"></div>
 					<div class="subject" :class="{multipaper : type===2, judge : type===3, read : type === 4}">{{item.question}}</div>
 				</div>
-				<div class="option-section">
+				<div class="option-section" :class="{read : type === 4}">
 					<div v-for="(optionItem,optionIndex) in item.options" class='option' 
-							@click="select(index, optionIndex)" :class="{short : optionItem.answer.length <= 4,
+							@click="select(index, optionIndex)" :class="{short : optionItem.answer.length <= 4,multipaper : type===2,read : type === 4,
 							 active : optionItem.isActive && type !==3, judge : type===3, judgeActive : optionItem.isActive && type===3}">
 						<div class="select">{{changeToOption(optionIndex)}}</div>
 						<div class="answer" :class="{correct : type === 3, error : type===3 && optionIndex===1}">
 							{{type === 3 ? '' : optionItem.answer}}</div>
 					</div>
 				</div>
-				<div class="confirm" v-show="type === 2 || (type === 4 && nowIndex===maxIndex)">
+				<div class="confirm" v-show="type === 2 || (type === 4 && nowIndex===maxIndex)" :class="{read : type === 4}">
 					<div @click="confirm" class="sure" :class="{scale : clickedConfirm}">{{(type === 4 && nowIndex===maxIndex) ? '交卷':'确认'}}</div>
-					<img src="../assets/images/pencil.png" width="30" height="30" @click="confirm" 
+					<img src="../assets/images/jt.png" width="49" height="34" @click="confirm" 
 						:class="{scale : clickedConfirm}">
 				</div>
 			</div>
@@ -39,7 +39,8 @@ export default {
 			nowQuestion: [],
 			multiselect: [],
 			optionClick: false,
-			clickedConfirm: false
+			clickedConfirm: false,
+			radioOptionSelected: false
 		}
 	},
 	components: {
@@ -152,6 +153,11 @@ export default {
 					return
 				}
 				this.radioOptionSelected = true
+				// if (num1 >= this.maxIndex) {
+				// 	setTimeout(() => {
+				// 		this.radioOptionSelected = false
+				// 	}, 600);
+				// }
 				option.isActive = true
 				if (option.correct) {
 					if (this.type === 1) {
@@ -179,18 +185,28 @@ export default {
 		changeIndex () {
 			setTimeout(() => {
 				this.clickedConfirm = false
-			}, 200)
+			}, 100)
 			if (this.nowIndex < this.maxIndex) {
 				setTimeout(() => {
 					this.nowIndex = this.nowIndex + 1
 					this.radioOptionSelected = false
-				}, 500);
+				}, 100);
 			}
 			else {
 				setTimeout(() => {
 					this.$emit('changeSection', 1);
-				}, 500)
+					this.init()
+				}, 100)
 			}
+		},
+		init () {
+			this.nowIndex = 0
+			this.nowQuestion = this.questions[this.type - 1]
+			this.maxIndex = this.questions[this.type - 1].length - 1
+			this.multiselect = []
+			this.optionClick = false
+			this.clickedConfirm = false
+			this.radioOptionSelected = false
 		}
 	},
 	computed: {
@@ -201,10 +217,12 @@ export default {
 	.question
 		.item
 			&.fadeIn-enter-active
+				transform translateX(0)
 				opacity 1
-				transition all 1s ease
+				transition all .8s ease
 			&.fadeIn-enter,&.fadeIn-leave-active
 				opacity 0
+				transform translateX(500px)
 			.title
 				position relative
 				font-size 17px
@@ -221,7 +239,10 @@ export default {
 						background url("../assets/images/small-paper.png") center no-repeat
 						background-size 100%
 					&.read
-						height calc((100vw - 4px) * 0.8324324324324324)
+						width 97%
+						height calc((100vw - 20px) * 0.8324324324324324)
+						margin-top -13.5px
+						margin-left 5px
 						background url("../assets/images/multi-paper.png") center no-repeat
 						background-size 100%
 				.subject
@@ -229,7 +250,7 @@ export default {
 					top 58px
 					left 19.7%
 					width 72.3%
-					font-size 25px
+					font-size 24px
 					line-height 1.44
 					letter-spacing 0.5px
 					&.multipaper
@@ -239,10 +260,13 @@ export default {
 						top 90px
 					&.read
 						font-size 19px
+						top 45px
 			.option-section
 				margin -20px 40px 0 39px
+				&.read
+					margin-top -30px
 				.option
-					margin-bottom 2px
+					margin-bottom 10px
 					display flex
 					align-items center
 					justify-content flex-start
@@ -250,6 +274,8 @@ export default {
 					height calc((100vw - 79px) * 0.2356902356902357)
 					background url('../assets/images/small-frame.png') center no-repeat
 					background-size 100%
+					&.multipaper,&.read
+						margin-bottom 2px
 					&.judge
 						width 100%
 						height calc((100vw - 79px) * 0.2693602693602694)
@@ -290,6 +316,8 @@ export default {
 				align-items center
 				font-size 27.25px
 				margin 5px 46.25px 0
+				&.read
+					margin-top -1px
 				.sure,img
 					transition all .5s ease
 					&.scale
