@@ -41,7 +41,7 @@
     },
     {
       "type": "1",
-      "question": "说要争取让自己家员工都享受两房一厅待遇的企业家是谁？",
+      "question": "2017年，说要争取让自己家员工都享受两房一厅待遇的企业家是谁？",
       "options": [{
           "answer": "马云",
           "correct": false,
@@ -61,7 +61,7 @@
     },
     {
       "type": "1",
-      "question": "监狱内：小伙制造假币被抓，民警问其为何制造假币？小伙原话说了什么？",
+      "question": "2017年，小伙制造假币被抓，民警问其为何制造假币？小伙原话说了什么？",
       "options": [{
           "answer": "生活窘迫，无奈之举",
           "correct": false,
@@ -73,7 +73,7 @@
           "isActive": false
         },
         {
-          "answer": "投机取巧，觉得自己做的比真币好",
+          "answer": "觉得自己做的比真币好",
           "correct": false,
           "isActive": false
         }
@@ -81,7 +81,7 @@
     },
     {
       "type": "1",
-      "question": "早恋青年男女遭到家长反对后，誓死要用生命的力量在一起，那么，他们用什么将手粘在了一起？",
+      "question": "早恋情侣遭到家长反对后，誓死要在一起，那么，他们用什么将手粘在了一起？",
       "options": [{
           "answer": "玻璃胶",
           "correct": false,
@@ -103,9 +103,10 @@
   [{
       "type": "2",
       "question": "以下影视作品与剧中角色哪些是正确匹配？",
-      "options": [{
-          "answer": "《摔跤吧！爸爸》阿米尔汗",
-          "correct": false,
+      "options": [
+        {
+          "answer": "《人民的名义》达康书记",
+          "correct": true,
           "isActive": false
         },
         {
@@ -122,25 +123,20 @@
           "answer": "《欢乐颂》安迪",
           "correct": true,
           "isActive": false
-        },
-        {
-          "answer": "《人民的名义》达康书记",
-          "correct": true,
-          "isActive": false
         }
       ]
     },
     {
       "type": "2",
-      "question": "2017年娱乐圈狗血大事件中，有哪几个事件是在微博上得到实锤的呢？",
+      "question": "以下事件有哪些是在微博上得到实锤的呢？",
       "options": [{
           "answer": "李雨桐炮轰薛之谦",
           "correct": true,
           "isActive": false
         },
         {
-          "answer": "白百何陈羽凡离婚",
-          "correct": true,
+          "answer": "王俊凯高考落榜",
+          "correct": false,
           "isActive": false
         },
         {
@@ -152,17 +148,12 @@
           "answer": "周杰林心如互撕",
           "correct": true,
           "isActive": false
-        },
-        {
-          "answer": "王俊凯高考落榜",
-          "correct": false,
-          "isActive": false
         }
       ]
     },
     {
       "type": "2",
-      "question": "2017年带给我们伤痛的事件，有哪些是由于人为因素造成的？",
+      "question": "以下事件有哪些是由于人为因素造成的？",
       "options": [{
           "answer": "四川九寨沟7.0级地震",
           "correct": false,
@@ -182,17 +173,12 @@
           "answer": "八达岭动物园老虎伤人事件",
           "correct": false,
           "isActive": false
-        },
-        {
-          "answer": "四川茂县山体滑坡事件",
-          "correct": false,
-          "isActive": false
         }
       ]
     },
     {
       "type": "2",
-      "question": "2017年，举办了双十一购物节的商家有哪些？",
+      "question": "2017年举办了双十一购物节的商家有哪些？",
       "options": [{
           "answer": "淘宝",
           "correct": true,
@@ -205,11 +191,6 @@
         },
         {
           "answer": "京东",
-          "correct": true,
-          "isActive": false
-        },
-        {
-          "answer": "唯品会",
           "correct": true,
           "isActive": false
         },
@@ -235,11 +216,6 @@
         },
         {
           "answer": "杜江——嗯哼",
-          "correct": true,
-          "isActive": false
-        },
-        {
-          "answer": "刘畊宏——泡芙",
           "correct": true,
           "isActive": false
         },
@@ -354,7 +330,7 @@
     },
     {
       "type": "4",
-      "question": "2017年6月，湖南怀化市一女子造谣称，单身汉可到县政府填表申请老婆。随后女子因在微信群里造谣传谣被公安机关依法行政拘留10日。\n结合全文，女子为什么被拘留？",
+      "question": "2017年6月，湖南怀化市一女子造谣称，单身汉可到县政府填表申请老婆。随后女子因在微信群里造谣传谣被依法行政拘留10日。\n结合全文，女子为什么被拘留？",
       "options": [{
           "answer": "因为老婆太少了",
           "correct": false,
@@ -379,9 +355,9 @@
     },
     {
       "type": "4",
-      "question": "2017年5月，男子网上招嫖嫖到妻子，开价1小时100元，男子当场气愤不已，但想到自己很爱老婆，于是他恳请民警劝说其老婆回归家庭\n结合全文，男子为什么气愤？",
+      "question": "2017年5月，男子网上招嫖嫖到妻子，开价1小时100元，男子当场气愤不已，但想到自己很爱老婆，于是恳请民警劝说其老婆回归家庭。\n结合全文，男子为什么气愤？",
       "options": [{
-          "answer": "因为对方开价1小时100元太贵了",
+          "answer": "因为1小时100元太贵了",
           "correct": false,
           "isActive": false
         },

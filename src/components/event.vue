@@ -13,7 +13,7 @@
 			</div>
 			<div class="num">{{progress}}<span>%</span></div>
 		</div>
-		<div class="type-logo" v-show="showLogo">
+		<div class="type-logo" v-show="showLogo" :class="{result : section === 5}">
 			<div class="logo-txt">{{logoTxt}}</div>
 		</div>
 		<div class="index-logo" v-show="section === 0">
@@ -64,7 +64,7 @@
 
 		<div class="bottom-section" v-show="section!==0 && section!==5 && !showQuestion">
 			<div class="circle-list">
-				<div v-for="(item, index) in questions" class="circle" 
+				<div v-for="(item, index) in questions" class="circle"
 					:id="'circle_' + (index+1)" :style="{'margin-left' : left}"></div>
 			</div>
 			<div class="activecircle" id="activecircle" :style="{left : circleLeft}"></div>
@@ -97,7 +97,7 @@ export default {
 	data () {
 		return {
 			progress: 10,
-			section: -1,
+			section: 5,
 			inputName: '',
 			showLogo: false,
 			showQuestion: true,
@@ -137,8 +137,11 @@ export default {
 			}
 		}
 		let score = getQueryString('score')
+		let name = getQueryString('name')
+		alert(name)
 		if (score) {
 			this.section = 5
+			this.inputName = name
 		}
 		// 异步获取用户信息
 		setTimeout(() => {
@@ -189,8 +192,11 @@ export default {
 				this.enterClicked = false
 				this.circleLeft = '0px'
 				this.left = (window.innerWidth - 76 - 62.5) / 5 + 'px'
+				this.$store.state.userScore = 0
 			}, 200)
-			this.$store.state.userScore = 0
+			for (let i = 0; i < 4; i++) {
+				document.getElementById('circle_' + (i + 1)).className = 'circle'
+			}
 			this.questions.forEach((item) => {
 				item.forEach((temp) => {
 					temp.options.forEach((a) => {
@@ -206,10 +212,10 @@ export default {
 				this.showLogo = true
 				let url
 				if (location.href.indexOf('?') > -1) {
-					url = location.href + '&score=' + this.$store.state.userScore
+					url = location.href + '&score=' + this.$store.state.userScore + '&name=' + this.inputName
 				}
 				else {
-					url = location.href + '?score=' + this.$store.state.userScore
+					url = location.href + '?score=' + this.$store.state.userScore + '&name=' + this.inputName
 				}
 				if (device.weixin) {
 					window.wnlui.wxShare({
@@ -271,12 +277,20 @@ export default {
 			else {
 				this.circleLeft = (parseInt(this.circleLeft.replace('px', '')) + parseInt(this.left.replace('px', '')) + 12.5 + 4.5) + 'px'
 			}
+			setTimeout(() => {
+				document.getElementById('circle_' + index).className = 'circle active'
+			}, 1000);
 		}
 	},
 	computed: mapState({
 		logoTxt () {
-			let arr = ['单选题', '多选题', '判断题', '阅读题', '成绩单']
-			return arr[this.section - 1]
+			let arr = ['单选题', '多选题', '判断题', '阅读题']
+			if (this.section === 5) {
+				return this.inputName + '的成绩单'
+			}
+			else {
+				return arr[this.section - 1]
+			}
 		},
 		userScore: state => state.userScore
 	}),
@@ -373,12 +387,17 @@ export default {
 			top -20px
 			right 20px
 			animation bounceInDown 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards
+			&.result
+				width 235px
+				height 73px
+				background url('../assets/images/type-tag-large.png') center no-repeat
+				background-size 100%
 			.logo-txt
 				position absolute
 				bottom 14px
 				left 22%
 				font-size 20.35px
-				letter-spacing 5.3px
+				letter-spacing 5.3px	
 			@keyframes bounceInDown {
 				0% {
 					transform: translate3d(0, -3000px, 0);
@@ -492,7 +511,6 @@ export default {
 					background-color #ffffff
 					border: solid 2px #000000
 					border-radius 50%
-					// margin-left calc((100vw - 76px - 62.5px) / 5)
 					&.active
 						background-color #ff8f45
 			.line

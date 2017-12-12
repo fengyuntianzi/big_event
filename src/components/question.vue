@@ -274,7 +274,7 @@ export default {
 					height calc((100vw - 79px) * 0.2356902356902357)
 					background url('../assets/images/small-frame.png') center no-repeat
 					background-size 100%
-					&.multipaper,&.read
+					&.read
 						margin-bottom 2px
 					&.judge
 						width 100%
@@ -293,7 +293,7 @@ export default {
 					.answer
 						margin-bottom 10px
 						margin-right 10px
-						font-size 20px
+						font-size 18px
 						&.correct
 							width 53px
 							height 41px
@@ -331,7 +331,7 @@ export default {
 	.question .item .title .subject.judge
 		font-size 20px !important
 	.question .item .option-section .option .answer
-		font-size 18px
+		font-size 14px
 /* iphone6p*/
 // @media screen and (min-width: 400px) and (max-width 420px)
 </style>
