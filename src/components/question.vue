@@ -122,6 +122,8 @@ export default {
 			else {
 				if (this.type === 4) {
 					console.log('交卷')
+					// console.log('得分：' + this.$store.state.userScore)
+					// localStorage.setItem('userscore', this.$store.state.userScore)
 				}
 				else {
 					if (this.correctAnswer().toString() === this.selectAnswer().toString()) {
@@ -190,7 +192,7 @@ export default {
 				setTimeout(() => {
 					this.nowIndex = this.nowIndex + 1
 					this.radioOptionSelected = false
-				}, 100);
+				}, 300);
 			}
 			else {
 				setTimeout(() => {
@@ -218,10 +220,8 @@ export default {
 		.item
 			&.fadeIn-enter-active
 				transform translateX(0)
-				opacity 1
-				transition all .8s ease
+				transition all .7s cubic-bezier(0.22, 0.61, 0.36, 1)
 			&.fadeIn-enter,&.fadeIn-leave-active
-				opacity 0
 				transform translateX(500px)
 			.title
 				position relative

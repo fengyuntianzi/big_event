@@ -79,20 +79,20 @@ import round from './round.vue'
 import question from './question.vue'
 import result from './result.vue'
 import questions from '../common/question.json'
-// import wnlui from '../common/utils/wnlui.js'
-window.wnlShare.setShareData({
+import getQueryString from '../common/utils/parseurl.js'
+import device from '../common/utils/device.js'
+import { mapState } from 'vuex'
+let shareData = {
 	title: '接招吧！历友',
 	text: '年底大考核，全对算你赢',
-	image: 'http://www.51wnl.com/wnl_bless/img/write2-myself@3x.png',
-	url: location.href
-})
-// window.wnlShare.showSharePlatform();
-// window.wxShare({
+	img: 'https://mobile.51wnl.com/temporary/event2017/static/img/index-title.6684050.png'
+}
+// window.wnlui.wxShare({
 // 	title: 'title',
 // 	text: 'text',
 // 	imageUrl: 'http://www.51wnl.com/wnl_bless/img/write2-myself@3x.png',
 // 	url: 'http://www.baidu.com'
-// });
+// })
 export default {
 	data () {
 		return {
@@ -117,13 +117,40 @@ export default {
 
 	},
 	created () {
+		// 非结果页
+		if (this.section !== 5) {
+			if (device.weixin) {
+				window.wnlui.wxShare({
+					title: shareData.title,
+					text: shareData.text,
+					imgUrl: shareData.img,
+					url: location.href
+				})
+			}
+			if (device.wnl) {
+				window.wnlui.wnlShare.setShareData({
+					title: shareData.title,
+					text: shareData.text,
+					image: shareData.img,
+					url: location.href
+				})
+			}
+		}
+		let score = getQueryString('score')
+		if (score) {
+			this.section = 5
+		}
 		// 异步获取用户信息
 		setTimeout(() => {
-			let name = store.userName
+			let name = this.$store.state.userName
 			if (name !== '') {
 				this.inputName = name
 			}
 		}, 500)
+		// 结果页 阻止进度条
+		if (this.section === 5) {
+			return
+		}
 		// 进度条
 		let interval = setInterval(() => {
 			this.progress += 1
@@ -177,6 +204,29 @@ export default {
 			this.section += 1
 			if (this.section === 5) {
 				this.showLogo = true
+				let url
+				if (location.href.indexOf('?') > -1) {
+					url = location.href + '&score=' + this.$store.state.userScore
+				}
+				else {
+					url = location.href + '?score=' + this.$store.state.userScore
+				}
+				if (device.weixin) {
+					window.wnlui.wxShare({
+						title: shareData.title,
+						text: shareData.text,
+						imgUrl: shareData.img,
+						url: url
+					})
+				}
+				if (device.wnl) {
+					window.wnlui.wnlShare.setShareData({
+						title: shareData.title,
+						text: shareData.text,
+						image: shareData.img,
+						url: url
+					})
+				}
 			}
 			else {
 				this.showLogo = true
@@ -223,15 +273,16 @@ export default {
 			}
 		}
 	},
-	computed: {
+	computed: mapState({
 		logoTxt () {
 			let arr = ['单选题', '多选题', '判断题', '阅读题', '成绩单']
 			return arr[this.section - 1]
-		}
-	},
+		},
+		userScore: state => state.userScore
+	}),
 	watch: {
 		inputName: (val) => {
-			console.log(val)
+			localStorage.setItem('userName', val)
 		}
 	}
 }
@@ -420,7 +471,7 @@ export default {
 		.bottom-section
 			width calc(100% - 76px)
 			position absolute
-			bottom 100px
+			bottom 80px
 			margin 0 38px
 			.activecircle
 				width 12.5px

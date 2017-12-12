@@ -13,31 +13,34 @@
 		<img src="../assets/images/qrcode-90.gif" alt="" class="qrcode" v-show="score >= 90 && score <= 99">
 		<img src="../assets/images/qrcode-100.gif" alt="" class="qrcode" v-show="score === 100">
 		
-		<div class="botton-wrapper">
+		<div class="botton-wrapper" v-show="!hasShareScore">
 			<div class="btn btn1" @click="playAgain" :class="{active : btn1clicked}">{{txt1}}</div>
 			<div class="btn btn2" @click="help" :class="{active : btn2clicked}">{{txt2}}</div>
+		</div>
+		<div class="shareTxt" v-show="hasShareScore">
+			<div >2017大事件考试</div>
+			<div>长按关注二维码</div>
+			<div>立即参与</div>
 		</div>
 	</div>
 </template>
 <script>
+import device from '../common/utils/device.js'
+import getQueryString from '../common/utils/parseurl.js'
+let shareScore = getQueryString('score')
+
 export default {
 	data () {
 		return {
+			hasShareScore: false,
 			btn1clicked: false,
 			btn2clicked: false
 		}
 	},
-	components: {
-
-	},
-	props: {
-
-	},
 	created () {
-		// setTimeout(() => {
-		// 	this.score = this.$store.state.userScore
-		// 	console.log(this.$store.state.userScore + '  ' + this.score)
-		// }, 300)
+		if (shareScore) {
+			this.hasShareScore = true
+		}
 	},
 	methods: {
 		playAgain () {
@@ -52,11 +55,17 @@ export default {
 			setTimeout(() => {
 				this.btn2clicked = false
 			}, 300);
+			if (device.wnl) {
+				window.wnlui.wnlShare.showSharePlatform();
+			}
 		}
 	},
 	computed: {
 		score () {
-			return this.$store.state.userScore
+			if (shareScore) {
+				return parseInt(shareScore)
+			}
+			return parseInt(this.$store.state.userScore)
 		},
 		desc () {
 			if (this.score >= 0 && this.score <= 29) {
@@ -157,7 +166,11 @@ export default {
 				&.active
 					background url('../assets/images/help-after.png') center no-repeat
 					background-size 100%;
-
+		.shareTxt
+			text-align center
+			font-size 18px
+			div
+				margin-top 7px
 /* iphone4、5*/
 @media screen and (max-width: 320px)
 	.result .score-wrapper .score

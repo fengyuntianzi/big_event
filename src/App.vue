@@ -22,7 +22,7 @@ html,body {
 }
 @font-face {
 	font-family: 'tx';
-	src: url('../static/font/tx.ttf');
+	src: url('./assets/tx.ttf');
 }
 #app {
 	width: 100%;
