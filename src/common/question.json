@@ -305,7 +305,7 @@
   ],
   [{
       "type": "4",
-      "question": "2017年4月，一醉酒驾驶司机为躲酒精测试，见逃跑无望，为了拖延时间路边拔草吃，一片草都被他吃光。\n结合全文，司机为什么要吃草？",
+      "question": "2017年4月，一醉酒驾驶司机为躲酒精测试，见逃跑无望，为了拖延时间路边拔草吃，一片草都被他吃光。 司机为什么要吃草？",
       "options": [{
           "answer": "因为司机属羊",
           "correct": false,
@@ -330,32 +330,7 @@
     },
     {
       "type": "4",
-      "question": "2017年6月，湖南怀化市一女子造谣称，单身汉可到县政府填表申请老婆。随后女子因在微信群里造谣传谣被依法行政拘留10日。\n结合全文，女子为什么被拘留？",
-      "options": [{
-          "answer": "因为老婆太少了",
-          "correct": false,
-          "isActive": false
-        },
-        {
-          "answer": "因为单身汉太多了",
-          "correct": false,
-          "isActive": false
-        },
-        {
-          "answer": "因为女子造谣传谣",
-          "correct": true,
-          "isActive": false
-        },
-        {
-          "answer": "因为县政府提供不了老婆",
-          "correct": false,
-          "isActive": false
-        }
-      ]
-    },
-    {
-      "type": "4",
-      "question": "2017年5月，男子网上招嫖嫖到妻子，开价1小时100元，男子当场气愤不已，但想到自己很爱老婆，于是恳请民警劝说其老婆回归家庭。\n结合全文，男子为什么气愤？",
+      "question": "2017年5月，男子网上招嫖嫖到妻子，开价1小时100元，男子当场气愤不已，但想到自己很爱老婆，于是恳请民警劝说其老婆回归家庭。 男子为什么气愤？",
       "options": [{
           "answer": "因为1小时100元太贵了",
           "correct": false,
@@ -374,6 +349,31 @@
         {
           "answer": "因为发现自己的头发变绿了",
           "correct": true,
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "type": "4",
+      "question": "2017年6月，湖南怀化市一女子造谣称，单身汉可到县政府填表申请老婆。随后女子因在微信群里造谣传谣被依法行政拘留10日。 女子为什么被拘留？",
+      "options": [{
+          "answer": "因为老婆太少了",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为单身汉太多了",
+          "correct": false,
+          "isActive": false
+        },
+        {
+          "answer": "因为女子造谣传谣",
+          "correct": true,
+          "isActive": false
+        },
+        {
+          "answer": "因为县政府提供不了老婆",
+          "correct": false,
           "isActive": false
         }
       ]

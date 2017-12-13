@@ -1,8 +1,9 @@
 <template>
 	<div class="event">
-		<!-- <div class="music" id='music' ref="music" @click="closeMusic">
-			<audio src="../assets/Synthion.mp3" autoplay="autoplay"></audio>
-		</div> -->
+		<div class="music-icon" @click.stop.prevent="toggleMusic" v-show="section!==-1" :class="{pause : musicPause, play : !musicPause}">
+			<audio src="../assets/Synthion-large.mp3" class='music' id="audio" autoplay="autoplay" loop='true'></audio>
+		</div>
+		<!-- <div class="clickDiv" @click="playMusic" style="width:100px;height:100px;position:absolute;top:-500px;left:0"></div> -->
 		<div class="loading" v-show="section === -1">
 			<div class="loading-section">
 				<div class="progress">
@@ -14,7 +15,8 @@
 			<div class="num">{{progress}}<span>%</span></div>
 		</div>
 		<div class="type-logo" v-show="showLogo" :class="{result : section === 5}">
-			<div class="logo-txt">{{logoTxt}}</div>
+			<div class="logo-txt" :class="{result : section === 5}">{{logoTxt}}</div>
+			<!-- <div class="result-txt">{{logoTxt}}</div> -->
 		</div>
 		<div class="index-logo" v-show="section === 0">
 			<img  src="../assets/images/index-tag.png" width="166" height="69">
@@ -26,7 +28,7 @@
 		</div>
 		<div class='index-section' v-show="section === 0">
 			<div class="index-content">
-				<div class="img-content"> 
+				<div class="img-content">
 					<img class="title" src="../assets/images/index-title.png">
 					<img class="book" src="../assets/images/index-book.gif">
 				</div>
@@ -81,23 +83,26 @@ import result from './result.vue'
 import questions from '../common/question.json'
 import getQueryString from '../common/utils/parseurl.js'
 import device from '../common/utils/device.js'
+/*eslint-disable no-unused-vars*/
+// import autoPlayMusic from '../common/utils/autoplay.js'
 import { mapState } from 'vuex'
 let shareData = {
-	title: '接招吧！历友',
+	title: '2017大事件全国统一考卷',
 	text: '年底大考核，全对算你赢',
-	img: 'https://mobile.51wnl.com/temporary/event2017/static/img/index-title.6684050.png'
+	img: 'http://mobile.51wnl.com/temporary/event2017/static/img/share.png'
 }
-// window.wnlui.wxShare({
-// 	title: 'title',
-// 	text: 'text',
-// 	imageUrl: 'http://www.51wnl.com/wnl_bless/img/write2-myself@3x.png',
-// 	url: 'http://www.baidu.com'
-// })
+let resultShareData = {
+	title: '我的2017大事件考卷得分为xx分！',
+	text: '2017大事件全国统一考卷，鸡年你白过了吗',
+	img: 'http://mobile.51wnl.com/temporary/event2017/static/img/share.png'
+}
+
 export default {
 	data () {
 		return {
+			musicPause: true,
 			progress: 10,
-			section: 5,
+			section: -1,
 			inputName: '',
 			showLogo: false,
 			showQuestion: true,
@@ -117,6 +122,13 @@ export default {
 
 	},
 	created () {
+		// 将当前vue实例对象指向一个变量，才能在watch周期中使用
+		// vueObject = this
+		// if (this.section === -1) {
+		// 	document.addEventListener('touchstart', function (e) {
+		// 		e.preventDefault()
+		// 	});
+		// }
 		// 非结果页
 		if (this.section !== 5) {
 			if (device.weixin) {
@@ -138,7 +150,7 @@ export default {
 		}
 		let score = getQueryString('score')
 		let name = getQueryString('name')
-		alert(name)
+		// alert(name)
 		if (score) {
 			this.section = 5
 			this.inputName = name
@@ -170,6 +182,13 @@ export default {
 				clearInterval(interval)
 				setTimeout(() => {
 					this.section = 0
+					setTimeout(() => {
+						// document.addEventListener('touchstart', () => {
+						// 	let audio = document.getElementById('audio');
+						// 	audio.play();
+						// 	this.musicPause = false
+						// });
+					}, 200);
 				}, 300);
 			}
 		}, 70)
@@ -178,11 +197,19 @@ export default {
 		if (this.section === 5) {
 			this.showLogo = true
 		}
+		document.getElementsByClassName('music')[0].pause()
 	},
 	methods: {
-		closeMusic (e) {
-			console.log(e.target.style)
-			// console.log(this.$refs.music.style.cssText)
+		toggleMusic () {
+			let audio = document.getElementById('audio');
+			if (audio.paused) {
+				audio.play()
+				this.musicPause = false
+			}
+			else {
+				audio.pause()
+				this.musicPause = true
+			}
 		},
 		changeToindex () {
 			setTimeout(() => {
@@ -219,10 +246,28 @@ export default {
 				}
 				if (device.weixin) {
 					window.wnlui.wxShare({
+						title: resultShareData.title.replace('xx', this.$store.state.userScore),
+						text: resultShareData.text,
+						imgUrl: resultShareData.img,
+						url: url
+					})
+				}
+				if (device.wnl) {
+					window.wnlui.wnlShare.setShareData({
+						title: resultShareData.title.replace('xx', this.$store.state.userScore),
+						text: resultShareData.text,
+						image: resultShareData.img,
+						url: url
+					})
+				}
+			}
+			else {
+				if (device.weixin) {
+					window.wnlui.wxShare({
 						title: shareData.title,
 						text: shareData.text,
 						imgUrl: shareData.img,
-						url: url
+						url: location.href
 					})
 				}
 				if (device.wnl) {
@@ -230,11 +275,9 @@ export default {
 						title: shareData.title,
 						text: shareData.text,
 						image: shareData.img,
-						url: url
+						url: location.href
 					})
 				}
-			}
-			else {
 				this.showLogo = true
 				setTimeout(() => {
 					this.moveCircle(this.section)
@@ -247,10 +290,20 @@ export default {
 			}
 		},
 		enter () {
+			// console.log(this)
 			if (this.inputName === '' || this.inputName === undefined || this.inputName === 'undefined') {
 				this.$vux.toast.show({
 					type: 'text',
 					text: '请输入名字',
+					position: 'bottom',
+					time: 1000
+				})
+				return
+			}
+			if (this.inputName.length > 4) {
+				this.$vux.toast.show({
+					type: 'text',
+					text: '输入的名字太长啦~',
 					position: 'bottom',
 					time: 1000
 				})
@@ -296,7 +349,7 @@ export default {
 	}),
 	watch: {
 		inputName: (val) => {
-			localStorage.setItem('userName', val)
+			console.log(val)
 		}
 	}
 }
@@ -361,16 +414,22 @@ export default {
 				letter-spacing -2.2px
 				span 
 					margin-left 2px
-		.music
+		.music-icon
 			position absolute
-			top 20px
-			left 20px
-			width 35px
-			height 35px
+			top 10px
+			left 10px
+			width 27px
+			height 27px
 			z-index 100
-			background url('../assets/images/music.png') center no-repeat
-			background-size cover
-			animation rotate 3s cubic-bezier(.62,1.39,.39,-0.24) infinite
+			&.play
+				background url('../assets/images/music-play.png') center no-repeat
+				background-size cover
+				// animation rotate 3s cubic-bezier(.62,1.39,.39,-0.24) infinite
+				animation rotate 3s linear infinite
+			&.pause
+				animation none
+				background url('../assets/images/music-pause.png') center no-repeat
+				background-size cover
 			@keyframes rotate
 				0% {
 					transform rotate(0deg)
@@ -392,12 +451,24 @@ export default {
 				height 73px
 				background url('../assets/images/type-tag-large.png') center no-repeat
 				background-size 100%
+			// .result-txt
+			// 	display inline-block
+			// 	margin 0 auto
+			// 	text-align center
+			// 	line-height 100px
 			.logo-txt
 				position absolute
 				bottom 14px
 				left 22%
 				font-size 20.35px
-				letter-spacing 5.3px	
+				letter-spacing 5.3px
+				&.result
+					position static
+					margin 0 auto
+					text-align center
+					line-height 100px
+					font-family: 'PingFangSC',"苹方-简", "Helvetica Neue", "Helvetica", "STHeitiSC-Light", "Arial", sans-serif;
+					font-weight bold
 			@keyframes bounceInDown {
 				0% {
 					transform: translate3d(0, -3000px, 0);
@@ -467,6 +538,8 @@ export default {
 							border-bottom 1px solid #333
 							border-radius 0
 							background-color transparent
+							padding-bottom 3px
+							// margin-top -3px
 							&::-webkit-input-placeholder
 								color #d5ba01
 				.begin
@@ -482,6 +555,12 @@ export default {
 					&.active 
 						background url('../assets/images/enter-after.png') center no-repeat
 						background-size 100%
+					@media screen and (min-height 700px) and (max-height 736px) {
+						margin-top 35px
+					}
+					@media screen and (min-height 737px) {
+						margin-top 50px
+					}
 		.temp-round
 			padding-top 13.5px
 			margin 0 2px 0

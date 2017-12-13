@@ -4,7 +4,7 @@
 			<div class="score">{{score}}分</div>
 		</div>
 		<div class="desc-wrapper">
-			<div class="desc" :class="{dobuleline : !(score === 100 || score < 30)}">{{desc}}</div>
+			<div class="desc" :class="{dobuleline : !(score < 30 || (score >= 60 && score <= 69))}">{{desc}}</div>
 		</div>
 		<img src="../assets/images/qrcode-0.gif" alt="" class="qrcode" v-show="score >= 0 && score <= 29">
 		<img src="../assets/images/qrcode-30.gif" alt="" class="qrcode" v-show="score >= 30 && score <= 59">
@@ -17,7 +17,10 @@
 			<div class="btn btn1" @click="playAgain" :class="{active : btn1clicked}">{{txt1}}</div>
 			<div class="btn btn2" @click="help" :class="{active : btn2clicked}">{{txt2}}</div>
 		</div>
-		<div class="shareTxt" v-show="hasShareScore">
+		<div class="guide" v-show="showGuide" @click="hideGuide">
+			<img src="../assets/images/guide.png" alt="">
+		</div>
+		<div class="shareTxt" v-show="hasShareScore" :class="{top : (score >= 0 && score <= 29), bottom: !(score >= 0 && score <= 29)}">
 			<div >2017大事件考试</div>
 			<div>长按关注二维码</div>
 			<div>立即参与</div>
@@ -34,7 +37,8 @@ export default {
 		return {
 			hasShareScore: false,
 			btn1clicked: false,
-			btn2clicked: false
+			btn2clicked: false,
+			showGuide: false
 		}
 	},
 	created () {
@@ -58,6 +62,12 @@ export default {
 			if (device.wnl) {
 				window.wnlui.wnlShare.showSharePlatform();
 			}
+			else {
+				this.showGuide = true
+			}
+		},
+		hideGuide () {
+			this.showGuide = false
 		}
 	},
 	computed: {
@@ -69,22 +79,22 @@ export default {
 		},
 		desc () {
 			if (this.score >= 0 && this.score <= 29) {
-				return '你可能过了一个假的2017年'
+				return '你可能过了一个假的2017年...'
 			}
 			else if (this.score >= 30 && this.score <= 59) {
-				return '有没有记住老师讲的考点，你心里没点B数吗？'
+				return '有没有记住考点，你心里没点数吗？'
 			}
 			else if (this.score >= 60 && this.score <= 69) {
-				return '惊喜不惊喜？意外不意外？跑过及格线，不怕你骄傲！'
+				return '跑过及格线，不怕你骄傲！'
 			}
 			else if (this.score >= 70 && this.score <= 89) {
-				return '撸起袖子加油干！你可能需要解锁更多新姿势'
+				return '撸起袖子加油干！解锁更多姿势'
 			}
 			else if (this.score >= 90 && this.score <= 99) {
-				return '好好学习天天向上，三好学生就是你！'
+				return '好好学习天天向上，你就是三好学生！'
 			}
 			else if (this.score === 100) {
-				return '万年历为你疯狂打call！'
+				return '你真厉害！万年历为你疯狂打call！'
 			}
 		},
 		txt1 () {
@@ -117,6 +127,9 @@ export default {
 			height calc((100vw - 20px) * 0.338368580060423)
 			background url('../assets/images/belt.png') center no-repeat
 			background-size 100%;
+			@media screen and (max-width 325px) {
+				margin-bottom 0
+			}
 			.score
 				text-align center
 				margin-left 5%
@@ -129,9 +142,12 @@ export default {
 			height 72px
 			background url('../assets/images/duihuak1.png') center no-repeat
 			background-size 100%
+			@media screen and (min-height 700px) {
+				margin 10px auto 20px 
+			}
 			.desc
 				text-align center
-				padding 7% 15px 0 15px
+				padding 7% 5px 0 5px
 				font-size 19px
 				letter-spacing 0.2px
 				line-height 1.2
@@ -146,6 +162,9 @@ export default {
 			margin-top 10px
 			display flex
 			justify-content space-around
+			@media screen and (max-width 325px) {
+				margin-top 5px
+			}
 			.btn
 				width 141px
 				height 70px
@@ -166,9 +185,40 @@ export default {
 				&.active
 					background url('../assets/images/help-after.png') center no-repeat
 					background-size 100%;
+		.guide
+			position fixed
+			top 0
+			left 0
+			width 100%
+			height 100%
+			background-color #000
+			opacity 0.7
+			text-align right
+			img
+				margin-right 30px
 		.shareTxt
 			text-align center
 			font-size 18px
+			&.top
+				@media screen and (min-width: 325px) {
+					margin-top 15px
+				}
+				@media screen and (min-height 700px) and (max-height 736px) {
+					margin-top 35px 
+				}
+				@media screen and (min-height 737px) {
+					margin-top 50px
+				}
+			&.bottom
+				@media screen and (min-width: 325px) {
+					margin-top 40px
+				}
+				@media screen and (min-height 700px) and (max-height 736px) {
+					margin-top 50px 
+				}
+				@media screen and (min-height 737px) {
+					margin-top 50px
+				}
 			div
 				margin-top 7px
 /* iphone4、5*/

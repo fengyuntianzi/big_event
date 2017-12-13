@@ -5,9 +5,13 @@
 				<div class="title">
 					<!-- <img src="../assets/images/radio-paper.png" alt="" class="paper"> -->
 					<div class="paper" :class="{multipaper : type===2, read : type === 4}"></div>
-					<div class="subject" :class="{multipaper : type===2, judge : type===3, read : type === 4}">{{item.question}}</div>
+					<div class="subject" :class="{multipaper : type===2, judge : type===3, read : type === 4}" v-show="type !== 4">{{item.question}}</div>
+					<div class="subject" v-show="type === 4" :class="{read : type === 4}">
+						<div class="desc">{{item.question.split(' ')[0]}}</div>
+						<div class="ques">{{item.question.split(' ')[1]}}</div>
+					</div>
 				</div>
-				<div class="option-section" :class="{read : type === 4}">
+				<div class="option-section" :class="{read : type === 4, judge : type===3}">
 					<div v-for="(optionItem,optionIndex) in item.options" class='option' 
 							@click="select(index, optionIndex)" :class="{short : optionItem.answer.length <= 4,multipaper : type===2,read : type === 4,
 							 active : optionItem.isActive && type !==3, judge : type===3, judgeActive : optionItem.isActive && type===3}">
@@ -172,9 +176,9 @@ export default {
 						this.$store.state.userScore += ReadScore
 					}
 				}
-				console.log(option.answer)
-				console.log('当前分数：' + this.$store.state.userScore)
-				console.log('当前选择题目索引：' + this.nowIndex)
+				// console.log(option.answer)
+				// console.log('当前分数：' + this.$store.state.userScore)
+				// console.log('当前选择题目索引：' + this.nowIndex)
 				if (this.type === 4 && this.nowIndex === this.maxIndex) {
 					return
 				}
@@ -247,7 +251,7 @@ export default {
 						background-size 100%
 				.subject
 					position absolute
-					top 58px
+					top 45px
 					left 19.7%
 					width 72.3%
 					font-size 24px
@@ -261,10 +265,31 @@ export default {
 					&.read
 						font-size 19px
 						top 45px
+						.desc
+							font-size 18px
+							@media screen and (max-width: 320px){
+								font-size 16px
+							}
+					.desc
+						font-size 20px
+						line-height 1.5
+						letter-spacing 0.4px
+						@media screen and (max-width: 320px){
+							font-size 16px
+						}
+					.ques
+						font-size 25px
+						margin-top 5px
+						@media screen and (max-width: 320px){
+							font-size 22px
+							margin-top 5px
+						}
 			.option-section
 				margin -20px 40px 0 39px
 				&.read
 					margin-top -30px
+				&.judge
+					margin-top 8px
 				.option
 					margin-bottom 10px
 					display flex
@@ -289,7 +314,10 @@ export default {
 						background-size 100%
 					.select
 						margin 0 8px 10px 15px
-						font-size 33px
+						font-size 30px
+						@media screen and (max-width: 325px){
+							font-size 25px
+						}
 					.answer
 						margin-bottom 10px
 						margin-right 10px
@@ -323,15 +351,13 @@ export default {
 					&.scale
 						transform scale(.5)
 /* iphone4、5*/
-@media screen and (max-width: 320px)
+@media screen and (max-width: 325px)
 	.question .item .title .subject
-		font-size 21px
+		font-size 19px
 	.question .item .title .subject.read,.question .item .title .subject.multipaper
 		font-size 16px !important
 	.question .item .title .subject.judge
 		font-size 20px !important
-	.question .item .option-section .option .answer
+	.question .item .option-section .option .answer,.question .item .option-section .option.short .answer
 		font-size 14px
-/* iphone6p*/
-// @media screen and (min-width: 400px) and (max-width 420px)
 </style>
