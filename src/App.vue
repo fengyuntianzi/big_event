@@ -30,4 +30,10 @@ html,body {
 	font-family: 'tx';
 	overflow-x: hidden;
 }
+.weui-toast_text .weui-toast__content {
+	font-size: 15px !important
+}
+/* .weui-toast.weui-toast_text.vux-toast-bottom {
+
+} */
 </style>

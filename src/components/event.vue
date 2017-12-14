@@ -66,8 +66,12 @@
 
 		<div class="bottom-section" v-show="section!==0 && section!==5 && !showQuestion">
 			<div class="circle-list">
-				<div v-for="(item, index) in questions" class="circle"
-					:id="'circle_' + (index+1)" :style="{'margin-left' : left}"></div>
+				<!-- <div v-for="(item, index) in questions" class="circle"
+					:id="'circle_' + (index+1)" :style="{marginLeft : left}"></div> -->
+				<div class="circle" id="circle_1" :style="{marginLeft : left}"></div>
+				<div class="circle" id="circle_2" :style="{marginLeft : left}"></div>
+				<div class="circle" id="circle_3" :style="{marginLeft : left}"></div>
+				<div class="circle" id="circle_4" :style="{marginLeft : left}"></div>
 			</div>
 			<div class="activecircle" id="activecircle" :style="{left : circleLeft}"></div>
 			<div class="line"></div>
@@ -97,10 +101,39 @@ let resultShareData = {
 	img: 'http://mobile.51wnl.com/temporary/event2017/static/img/share.png'
 }
 
+if (device.weixin) {
+	window.wnlui.wxShare({
+		title: shareData.title,
+		text: shareData.text,
+		imgUrl: shareData.img,
+		url: location.href
+	})
+}
+if (device.wnl) {
+	window.wnlui.wnlShare.setShareData({
+		title: shareData.title,
+		text: shareData.text,
+		image: shareData.img,
+		url: location.href
+	})
+}
+
+let wxNickName = ''
+if (device.weixin) {
+	let openid = getQueryString('openid')
+	if (openid) {
+		wxNickName = getQueryString('nickname')
+		console.log('已获取到信息')
+	}
+	else {
+		location.href = 'https://b.cqyouloft.com/atcapi/WeChat/WxProcess?reurl=' + encodeURIComponent(window.location.href)
+	}
+}
+
 export default {
 	data () {
 		return {
-			musicPause: true,
+			musicPause: false,
 			progress: 10,
 			section: -1,
 			inputName: '',
@@ -130,38 +163,42 @@ export default {
 		// 	});
 		// }
 		// 非结果页
-		if (this.section !== 5) {
-			if (device.weixin) {
-				window.wnlui.wxShare({
-					title: shareData.title,
-					text: shareData.text,
-					imgUrl: shareData.img,
-					url: location.href
-				})
-			}
-			if (device.wnl) {
-				window.wnlui.wnlShare.setShareData({
-					title: shareData.title,
-					text: shareData.text,
-					image: shareData.img,
-					url: location.href
-				})
-			}
-		}
-		let score = getQueryString('score')
-		let name = getQueryString('name')
-		// alert(name)
-		if (score) {
-			this.section = 5
-			this.inputName = name
-		}
 		// 异步获取用户信息
 		setTimeout(() => {
 			let name = this.$store.state.userName
 			if (name !== '') {
 				this.inputName = name
 			}
+			if (device.weixin) {
+				this.inputName = wxNickName
+				this.$store.state.userName = wxNickName
+			}
 		}, 500)
+		let score = getQueryString('score')
+		let name = decodeURIComponent(getQueryString('name'))
+		// alert(name)
+		if (score) {
+			this.section = 5
+			this.inputName = name
+			setTimeout(() => {
+				this.$store.state.userName = name
+			}, 600);
+			// let url
+			// if (location.href.indexOf('?') > -1) {
+			// 	url = location.href + '&score=' + score + '&name=' + name
+			// }
+			// else {
+			// 	url = location.href + '?score=' + score + '&name=' + name
+			// }
+			if (device.weixin) {
+				window.wnlui.wxShare({
+					title: resultShareData.title.replace('xx', score),
+					text: resultShareData.text,
+					imgUrl: resultShareData.img,
+					url: location.href
+				})
+			}
+		}
 		// 结果页 阻止进度条
 		if (this.section === 5) {
 			return
@@ -197,7 +234,7 @@ export default {
 		if (this.section === 5) {
 			this.showLogo = true
 		}
-		document.getElementsByClassName('music')[0].pause()
+		document.getElementsByClassName('music')[0].play()
 	},
 	methods: {
 		toggleMusic () {
@@ -231,30 +268,47 @@ export default {
 					})
 				})
 			})
+			if (device.weixin) {
+				window.wnlui.wxShare({
+					title: shareData.title,
+					text: shareData.text,
+					imgUrl: shareData.img,
+					url: location.href
+				})
+			}
+			if (device.wnl) {
+				window.wnlui.wnlShare.setShareData({
+					title: shareData.title,
+					text: shareData.text,
+					image: shareData.img,
+					url: location.href
+				})
+			}
 		},
 		changeSection (data) {
 			console.log(data)
 			this.section += 1
 			if (this.section === 5) {
 				this.showLogo = true
+				let score = this.$store.state.userScore
 				let url
 				if (location.href.indexOf('?') > -1) {
-					url = location.href + '&score=' + this.$store.state.userScore + '&name=' + this.inputName
+					url = location.href + '&score=' + score + '&name=' + this.inputName
 				}
 				else {
-					url = location.href + '?score=' + this.$store.state.userScore + '&name=' + this.inputName
+					url = location.href + '?score=' + score + '&name=' + this.inputName
 				}
-				if (device.weixin) {
-					window.wnlui.wxShare({
-						title: resultShareData.title.replace('xx', this.$store.state.userScore),
-						text: resultShareData.text,
-						imgUrl: resultShareData.img,
-						url: url
-					})
-				}
+				// if (device.weixin) {
+				// 	window.wnlui.wxShare({
+				// 		title: resultShareData.title.replace('xx', score),
+				// 		text: resultShareData.text,
+				// 		imgUrl: resultShareData.img,
+				// 		url: url
+				// 	})
+				// }
 				if (device.wnl) {
 					window.wnlui.wnlShare.setShareData({
-						title: resultShareData.title.replace('xx', this.$store.state.userScore),
+						title: resultShareData.title.replace('xx', score),
 						text: resultShareData.text,
 						image: resultShareData.img,
 						url: url
@@ -262,22 +316,22 @@ export default {
 				}
 			}
 			else {
-				if (device.weixin) {
-					window.wnlui.wxShare({
-						title: shareData.title,
-						text: shareData.text,
-						imgUrl: shareData.img,
-						url: location.href
-					})
-				}
-				if (device.wnl) {
-					window.wnlui.wnlShare.setShareData({
-						title: shareData.title,
-						text: shareData.text,
-						image: shareData.img,
-						url: location.href
-					})
-				}
+				// if (device.weixin) {
+				// 	window.wnlui.wxShare({
+				// 		title: shareData.title,
+				// 		text: shareData.text,
+				// 		imgUrl: shareData.img,
+				// 		url: location.href
+				// 	})
+				// }
+				// if (device.wnl) {
+				// 	window.wnlui.wnlShare.setShareData({
+				// 		title: shareData.title,
+				// 		text: shareData.text,
+				// 		image: shareData.img,
+				// 		url: location.href
+				// 	})
+				// }
 				this.showLogo = true
 				setTimeout(() => {
 					this.moveCircle(this.section)
@@ -294,7 +348,7 @@ export default {
 			if (this.inputName === '' || this.inputName === undefined || this.inputName === 'undefined') {
 				this.$vux.toast.show({
 					type: 'text',
-					text: '请输入名字',
+					text: '请输入名字~',
 					position: 'bottom',
 					time: 1000
 				})
@@ -305,7 +359,8 @@ export default {
 					type: 'text',
 					text: '输入的名字太长啦~',
 					position: 'bottom',
-					time: 1000
+					time: 1000,
+					width: '9.7em'
 				})
 				return
 			}
@@ -350,6 +405,7 @@ export default {
 	watch: {
 		inputName: (val) => {
 			console.log(val)
+			this.$store.state.userName = val
 		}
 	}
 }
@@ -594,5 +650,4 @@ export default {
 						background-color #ff8f45
 			.line
 				border: solid 1px #000000
-
 </style>

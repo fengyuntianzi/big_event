@@ -35,6 +35,11 @@ const RadioScore = 4
 const MultiScore = 6
 const JudgeScore = 4
 const ReadScore = 10
+let resultShareData = {
+	title: '我的2017大事件考卷得分为xx分！',
+	text: '2017大事件全国统一考卷，鸡年你白过了吗',
+	img: 'http://mobile.51wnl.com/temporary/event2017/static/img/share.png'
+}
 export default {
 	data () {
 		return {
@@ -111,6 +116,7 @@ export default {
 			setTimeout(() => {
 				this.clickedConfirm = true
 			}, 200);
+			let that = this
 			if (this.selectAnswer().length < 1) {
 				this.$vux.toast.show({
 					type: 'text',
@@ -128,6 +134,19 @@ export default {
 					console.log('交卷')
 					// console.log('得分：' + this.$store.state.userScore)
 					// localStorage.setItem('userscore', this.$store.state.userScore)
+					// let data = {
+					// 	title: resultShareData.title.replace('xx', that.$store.state.userScore),
+					// 	text: resultShareData.text,
+					// 	imgUrl: resultShareData.img,
+					// 	url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + that.$store.state.userScore + '&name=' + that.$store.state.userName
+					// }
+					window.wnlui.wxShare({
+						title: '我的2017大事件考卷得分为' + that.$store.state.userScore + '分！',
+						text: '2017大事件全国统一考卷，鸡年你白过了吗',
+						imgUrl: resultShareData.img,
+						url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + that.$store.state.userScore + '&name=' + encodeURIComponent(that.$store.state.userName)
+					})
+					// alert(JSON.stringify(data))
 				}
 				else {
 					if (this.correctAnswer().toString() === this.selectAnswer().toString()) {
