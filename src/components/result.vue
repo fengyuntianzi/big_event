@@ -68,7 +68,7 @@ export default {
 			setTimeout(() => {
 				this.btn1clicked = false
 			}, 300);
-			_czc.push(['_trackEvent', softType + '-不服再战点击-' + deviceType]);
+			_czc.push(['_trackEvent', softType, '-不服再战点击-' + deviceType]);
 		},
 		help () {
 			this.btn2clicked = true
@@ -81,7 +81,7 @@ export default {
 			else {
 				this.showGuide = true
 			}
-			_czc.push(['_trackEvent', softType + '-分享点击-' + deviceType]);
+			_czc.push(['_trackEvent', softType, '-分享点击-' + deviceType]);
 		},
 		hideGuide () {
 			this.showGuide = false

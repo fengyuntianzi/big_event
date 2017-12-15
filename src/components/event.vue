@@ -231,7 +231,7 @@ export default {
 		let name = decodeURIComponent(getQueryString('name'))
 		let isShare = getQueryString('isShare')
 		if (isShare) {
-			_czc.push(['_trackEvent', softType + '-好友点击分享页面-' + deviceType]);
+			_czc.push(['_trackEvent', softType, '-好友点击分享页面-' + deviceType]);
 		}
 		// 异步获取用户信息
 		setTimeout(() => {
@@ -422,7 +422,7 @@ export default {
 				this.showQuestion = true
 				this.showLogo = false
 			}, 3000);
-			_czc.push(['_trackEvent', softType + '-成功进入活动-' + deviceType]);
+			_czc.push(['_trackEvent', softType, '-成功进入活动-' + deviceType]);
 		},
 		moveCircle (index) {
 			if (index === 1) {

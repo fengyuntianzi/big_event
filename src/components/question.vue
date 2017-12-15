@@ -153,7 +153,7 @@ export default {
 			else {
 				if (this.type === 4) {
 					console.log('交卷')
-					_czc.push(['_trackEvent', softType + '-交卷点击-' + deviceType]);
+					_czc.push(['_trackEvent', softType, '-交卷点击-' + deviceType]);
 					window.wnlui.wxShare({
 						title: '我的2017大事件考卷得分为' + that.$store.state.userScore + '分！',
 						text: '2017大事件全国统一考卷，鸡年你白过了吗',
@@ -185,18 +185,18 @@ export default {
 			// 多选题
 			if (this.type === 2) {
 				option.isActive = !option.isActive
-				_czc.push(['_trackEvent', softType + '-多选题' + (num1 + 1) + '点击-' + deviceType]);
+				_czc.push(['_trackEvent', softType, '-多选题' + (num1 + 1) + '点击-' + deviceType]);
 			}
 			// 单选题
 			else {
 				if (this.type === 1) {
-					_czc.push(['_trackEvent', softType + '-单选题' + (num1 + 1) + '点击-' + deviceType]);
+					_czc.push(['_trackEvent', softType, '-单选题' + (num1 + 1) + '点击-' + deviceType]);
 				}
 				if (this.type === 3) {
-					_czc.push(['_trackEvent', softType + '-判断题' + (num1 + 1) + '点击-' + deviceType]);
+					_czc.push(['_trackEvent', softType, '-判断题' + (num1 + 1) + '点击-' + deviceType]);
 				}
 				if (this.type === 4) {
-					_czc.push(['_trackEvent', softType + '-阅读题' + (num1 + 1) + '点击-' + deviceType]);
+					_czc.push(['_trackEvent', softType, '-阅读题' + (num1 + 1) + '点击-' + deviceType]);
 				}
 				if (this.radioOptionSelected) {
 					return
