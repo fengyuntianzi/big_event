@@ -18,6 +18,7 @@
 			<div class="logo-txt" :class="{result : section === 5}">{{logoTxt}}</div>
 			<!-- <div class="result-txt">{{logoTxt}}</div> -->
 		</div>
+		<div class="wx-back" v-show="section===-999"></div>
 		<div class="index-logo" v-show="section === 0">
 			<img  src="../assets/images/index-tag.png" width="166" height="69">
 			<div class="index-copyright">
@@ -87,8 +88,9 @@ import result from './result.vue'
 import questions from '../common/question.json'
 import getQueryString from '../common/utils/parseurl.js'
 import device from '../common/utils/device.js'
+// import ResLoader from '../common/utils/resLoader.js'
 /*eslint-disable no-unused-vars*/
-// import autoPlayMusic from '../common/utils/autoplay.js'
+import autoPlayMusic from '../common/utils/autoplay.js'
 import { mapState } from 'vuex'
 let shareData = {
 	title: '2017大事件全国统一考卷',
@@ -106,7 +108,7 @@ if (device.weixin) {
 		title: shareData.title,
 		text: shareData.text,
 		imgUrl: shareData.img,
-		url: location.href
+		url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
 	})
 }
 if (device.wnl) {
@@ -114,21 +116,13 @@ if (device.wnl) {
 		title: shareData.title,
 		text: shareData.text,
 		image: shareData.img,
-		url: location.href
+		url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
 	})
 }
-
 let wxNickName = ''
-if (device.weixin) {
-	let openid = getQueryString('openid')
-	if (openid) {
-		wxNickName = getQueryString('nickname')
-		console.log('已获取到信息')
-	}
-	else {
-		location.href = 'https://b.cqyouloft.com/atcapi/WeChat/WxProcess?reurl=' + encodeURIComponent(window.location.href)
-	}
-}
+
+/*eslint-disable no-undef*/
+let percent = 0
 
 export default {
 	data () {
@@ -155,43 +149,100 @@ export default {
 
 	},
 	created () {
+		if (device.weixin) {
+			let openid = getQueryString('openid')
+			if (openid) {
+				wxNickName = getQueryString('nickname')
+				console.log('已获取到信息')
+				this.section = -1
+			}
+			else {
+				this.section = -999
+				location.href = 'https://b.cqyouloft.com/atcapi/WeChat/WxProcess?reurl=' + encodeURIComponent(window.location.href)
+			}
+		}
+		// let that = this
+		// let loader = new ResLoader({
+		// 	resources: [
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/belt.bd7b56f.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/enter.c0dc41c.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/enter-after.b2a9516.png',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/index-book.b701f09.gif',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/index-title.e5307ec.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/judge.65ca195.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/judge-after.db0a41c.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/multi-paper.700e273.png',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/qrcode-0.67feba0.gif',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/qrcode-30.ac0cbc3.gif',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/qrcode-60.060dff9.gif',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/qrcode-70.31eb758.gif',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/qrcode-90.287bfed.gif',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/qrcode-100.d868f05.gif',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/radio-paper.9f45ff8.png',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/round1.44bc131.png',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/round2.1bf4380.png',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/round3.07a22f4.png',
+		// 		// 'https://mobile.51wnl.com/temporary/event2017/static/img/round4.3de518f.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/small-frame-after.f9c696a.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/small-paper.e7cda8d.png',
+		// 		'https://mobile.51wnl.com/temporary/event2017/static/img/txdt.83b0639.gif'
+		// 	],
+		// 	onStart: function (total) {
+		// 		console.log('start:' + total);
+		// 	},
+		// 	onProgress: function (current, total) {
+		// 		console.log(current + '/' + total);
+		// 		percent = (current / total * 100).toString().split('.')[0];
+		// 		console.log((percent))
+		// 		that.progress = percent
+		// 		// if (that.progress >= 100) {
+		// 		// 	setTimeout(() => {
+		// 		// 		that.section = 0
+		// 		// 	}, 300);
+		// 		// }
+		// 	},
+		// 	onComplete: function (total) {
+		// 		console.log('加载完毕:' + total + '个资源');
+		// 		setTimeout(() => {
+		// 			that.section = 0
+		// 		}, 300);
+		// 	}
+		// });
+		// loader.start();
 		// 将当前vue实例对象指向一个变量，才能在watch周期中使用
 		// vueObject = this
-		// if (this.section === -1) {
-		// 	document.addEventListener('touchstart', function (e) {
-		// 		e.preventDefault()
-		// 	});
-		// }
-		// 非结果页
+		let score = getQueryString('score')
+		let name = decodeURIComponent(getQueryString('name'))
 		// 异步获取用户信息
 		setTimeout(() => {
-			let name = this.$store.state.userName
-			if (name !== '') {
-				this.inputName = name
+			if (device.wnl) {
+				let name = this.$store.state.userName
+				if (name !== '') {
+					this.inputName = name
+				}
 			}
 			if (device.weixin) {
 				this.inputName = wxNickName
-				this.$store.state.userName = wxNickName
 			}
 		}, 500)
-		let score = getQueryString('score')
-		let name = decodeURIComponent(getQueryString('name'))
 		// alert(name)
-		if (score) {
+		if (score && name) {
+			let that = this
 			this.section = 5
-			this.inputName = name
 			setTimeout(() => {
+				this.inputName = name
 				this.$store.state.userName = name
 			}, 600);
-			// let url
-			// if (location.href.indexOf('?') > -1) {
-			// 	url = location.href + '&score=' + score + '&name=' + name
-			// }
-			// else {
-			// 	url = location.href + '?score=' + score + '&name=' + name
-			// }
 			if (device.weixin) {
 				window.wnlui.wxShare({
+					title: '我的2017大事件考卷得分为' + score + '分！',
+					text: '2017大事件全国统一考卷，鸡年你白过了吗',
+					imgUrl: resultShareData.img,
+					url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + score + '&name=' + encodeURIComponent(name)
+				})
+			}
+			if (device.wnl) {
+				window.wnlui.setShareData({
 					title: resultShareData.title.replace('xx', score),
 					text: resultShareData.text,
 					imgUrl: resultShareData.img,
@@ -219,13 +270,6 @@ export default {
 				clearInterval(interval)
 				setTimeout(() => {
 					this.section = 0
-					setTimeout(() => {
-						// document.addEventListener('touchstart', () => {
-						// 	let audio = document.getElementById('audio');
-						// 	audio.play();
-						// 	this.musicPause = false
-						// });
-					}, 200);
 				}, 300);
 			}
 		}, 70)
@@ -273,7 +317,7 @@ export default {
 					title: shareData.title,
 					text: shareData.text,
 					imgUrl: shareData.img,
-					url: location.href
+					url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
 				})
 			}
 			if (device.wnl) {
@@ -281,7 +325,7 @@ export default {
 					title: shareData.title,
 					text: shareData.text,
 					image: shareData.img,
-					url: location.href
+					url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
 				})
 			}
 		},
@@ -298,14 +342,6 @@ export default {
 				else {
 					url = location.href + '?score=' + score + '&name=' + this.inputName
 				}
-				// if (device.weixin) {
-				// 	window.wnlui.wxShare({
-				// 		title: resultShareData.title.replace('xx', score),
-				// 		text: resultShareData.text,
-				// 		imgUrl: resultShareData.img,
-				// 		url: url
-				// 	})
-				// }
 				if (device.wnl) {
 					window.wnlui.wnlShare.setShareData({
 						title: resultShareData.title.replace('xx', score),
@@ -316,22 +352,6 @@ export default {
 				}
 			}
 			else {
-				// if (device.weixin) {
-				// 	window.wnlui.wxShare({
-				// 		title: shareData.title,
-				// 		text: shareData.text,
-				// 		imgUrl: shareData.img,
-				// 		url: location.href
-				// 	})
-				// }
-				// if (device.wnl) {
-				// 	window.wnlui.wnlShare.setShareData({
-				// 		title: shareData.title,
-				// 		text: shareData.text,
-				// 		image: shareData.img,
-				// 		url: location.href
-				// 	})
-				// }
 				this.showLogo = true
 				setTimeout(() => {
 					this.moveCircle(this.section)
@@ -344,26 +364,31 @@ export default {
 			}
 		},
 		enter () {
-			// console.log(this)
-			if (this.inputName === '' || this.inputName === undefined || this.inputName === 'undefined') {
-				this.$vux.toast.show({
-					type: 'text',
-					text: '请输入名字~',
-					position: 'bottom',
-					time: 1000
-				})
-				return
+			if ((this.inputName === this.$store.state.userName || this.inputName === wxNickName) && this.inputName !== '') {
+				console.log('不限制')
 			}
-			if (this.inputName.length > 4) {
-				this.$vux.toast.show({
-					type: 'text',
-					text: '输入的名字太长啦~',
-					position: 'bottom',
-					time: 1000,
-					width: '9.7em'
-				})
-				return
+			else {
+				if (this.inputName === '' || this.inputName === undefined || this.inputName === 'undefined') {
+					this.$vux.toast.show({
+						type: 'text',
+						text: '请输入名字~',
+						position: 'bottom',
+						time: 1000
+					})
+					return
+				}
+				if (this.inputName.length > 10) {
+					this.$vux.toast.show({
+						type: 'text',
+						text: '输入的名字太长啦~',
+						position: 'bottom',
+						time: 1000,
+						width: '9.7em'
+					})
+					return
+				}
 			}
+			this.$store.state.userName = this.inputName
 			this.enterClicked = true
 			setTimeout(() => {
 				this.section = 1
@@ -394,6 +419,9 @@ export default {
 		logoTxt () {
 			let arr = ['单选题', '多选题', '判断题', '阅读题']
 			if (this.section === 5) {
+				if (this.inputName.length >= 5) {
+					return this.inputName.substring(0, 4) + '...的成绩单'
+				}
 				return this.inputName + '的成绩单'
 			}
 			else {
@@ -405,7 +433,7 @@ export default {
 	watch: {
 		inputName: (val) => {
 			console.log(val)
-			this.$store.state.userName = val
+			// this.$store.state.userName = val
 		}
 	}
 }
@@ -470,6 +498,14 @@ export default {
 				letter-spacing -2.2px
 				span 
 					margin-left 2px
+		.wx-back
+			position fixed
+			top 0
+			left 0
+			width 100%
+			height 100%
+			z-index 9999
+			background-color #ffffff
 		.music-icon
 			position absolute
 			top 10px
@@ -525,6 +561,8 @@ export default {
 					line-height 100px
 					font-family: 'PingFangSC',"苹方-简", "Helvetica Neue", "Helvetica", "STHeitiSC-Light", "Arial", sans-serif;
 					font-weight bold
+					font-size 20.35px
+					letter-spacing 3px
 			@keyframes bounceInDown {
 				0% {
 					transform: translate3d(0, -3000px, 0);
@@ -561,12 +599,15 @@ export default {
 			position relative
 			.index-content
 				margin 0 17px 0 19px
-				padding-top 51.5px
+				padding-top 66px
+				@media screen and (max-width 325px){
+					padding-top 65px
+				}
 				.img-content
 					position relative
 					.title
 						width 100%
-						height calc((100vw - 36px) * 0.6430678466076696)
+						height calc((100vw - 36px) * 0.5727272727272727)
 					.book
 						width 90%
 						position absolute
@@ -581,7 +622,7 @@ export default {
 					margin-top 43%
 					.get-paper
 						display flex
-						align-items baseline
+						align-items center
 						justify-content center
 						flex-wrap nowrap
 						font-size 18px
@@ -589,12 +630,13 @@ export default {
 						color #000
 						input
 							width 50%
+							height 22px
 							outline 0
 							margin-left 7px
 							border-bottom 1px solid #333
 							border-radius 0
 							background-color transparent
-							padding-bottom 3px
+							padding 3px 0
 							// margin-top -3px
 							&::-webkit-input-placeholder
 								color #d5ba01

@@ -31,7 +31,6 @@
 import device from '../common/utils/device.js'
 import getQueryString from '../common/utils/parseurl.js'
 let shareScore = getQueryString('score')
-
 export default {
 	data () {
 		return {

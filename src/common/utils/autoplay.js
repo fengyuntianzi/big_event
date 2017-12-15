@@ -1,3 +1,5 @@
+
+var firstTouch = true
 //--创建页面监听，等待微信端页面加载完毕 触发音频播放
 document.addEventListener('DOMContentLoaded', function () {
 	function audioAutoPlay () {
@@ -13,7 +15,13 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('touchstart', function () {
 	function audioAutoPlay () {
 		var audio = document.getElementById('audio');
-		audio.play();
+		if (firstTouch) {
+			audio.play();
+		}
+		else {
+			return
+		}
+		firstTouch = false
 	}
 	audioAutoPlay();
 });
