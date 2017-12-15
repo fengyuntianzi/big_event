@@ -74,7 +74,7 @@
 				<div class="circle" id="circle_3" :style="{marginLeft : left}"></div>
 				<div class="circle" id="circle_4" :style="{marginLeft : left}"></div>
 			</div>
-			<div class="activecircle" id="activecircle" :style="{left : circleLeft}"></div>
+			<!-- <div class="activecircle" id="activecircle" :style="{left : circleLeft}"></div> -->
 			<div class="line"></div>
 		</div>
 
@@ -92,6 +92,22 @@ import device from '../common/utils/device.js'
 /*eslint-disable no-unused-vars*/
 import autoPlayMusic from '../common/utils/autoplay.js'
 import { mapState } from 'vuex'
+// 埋点
+let deviceType
+let softType
+if (device.wnl) {
+	softType = 'wnl'
+}
+if (device.weixin) {
+	softType = 'wx'
+}
+if (device.ios) {
+	deviceType = 'ios'
+}
+else {
+	deviceType = 'android'
+}
+
 let shareData = {
 	title: '2017大事件全国统一考卷',
 	text: '年底大考核，全对算你赢',
@@ -108,7 +124,7 @@ if (device.weixin) {
 		title: shareData.title,
 		text: shareData.text,
 		imgUrl: shareData.img,
-		url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
+		url: 'https://mobile.51wnl.com/temporary/event2017/index.html?isShare=true'
 	})
 }
 if (device.wnl) {
@@ -116,7 +132,7 @@ if (device.wnl) {
 		title: shareData.title,
 		text: shareData.text,
 		image: shareData.img,
-		url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
+		url: 'https://mobile.51wnl.com/temporary/event2017/index.html?isShare=true'
 	})
 }
 let wxNickName = ''
@@ -213,6 +229,10 @@ export default {
 		// vueObject = this
 		let score = getQueryString('score')
 		let name = decodeURIComponent(getQueryString('name'))
+		let isShare = getQueryString('isShare')
+		if (isShare) {
+			_czc.push(['_trackEvent', softType + '-好友点击分享页面-' + deviceType]);
+		}
 		// 异步获取用户信息
 		setTimeout(() => {
 			if (device.wnl) {
@@ -238,7 +258,7 @@ export default {
 					title: '我的2017大事件考卷得分为' + score + '分！',
 					text: '2017大事件全国统一考卷，鸡年你白过了吗',
 					imgUrl: resultShareData.img,
-					url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + score + '&name=' + encodeURIComponent(name)
+					url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + score + '&name=' + encodeURIComponent(name) + '&isShare=true'
 				})
 			}
 			if (device.wnl) {
@@ -317,7 +337,7 @@ export default {
 					title: shareData.title,
 					text: shareData.text,
 					imgUrl: shareData.img,
-					url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
+					url: 'https://mobile.51wnl.com/temporary/event2017/index.html?isShare=true'
 				})
 			}
 			if (device.wnl) {
@@ -325,7 +345,7 @@ export default {
 					title: shareData.title,
 					text: shareData.text,
 					image: shareData.img,
-					url: 'https://mobile.51wnl.com/temporary/event2017/index.html'
+					url: 'https://mobile.51wnl.com/temporary/event2017/index.html?isShare=true'
 				})
 			}
 		},
@@ -337,10 +357,10 @@ export default {
 				let score = this.$store.state.userScore
 				let url
 				if (location.href.indexOf('?') > -1) {
-					url = location.href + '&score=' + score + '&name=' + this.inputName
+					url = location.href + '&score=' + score + '&name=' + this.inputName + '&isShare=true'
 				}
 				else {
-					url = location.href + '?score=' + score + '&name=' + this.inputName
+					url = location.href + '?score=' + score + '&name=' + this.inputName + '&isShare=true'
 				}
 				if (device.wnl) {
 					window.wnlui.wnlShare.setShareData({
@@ -353,9 +373,9 @@ export default {
 			}
 			else {
 				this.showLogo = true
-				setTimeout(() => {
-					this.moveCircle(this.section)
-				}, 200);
+				// setTimeout(() => {
+				this.moveCircle(this.section)
+				// }, 200);
 				this.showQuestion = false
 				setTimeout(() => {
 					this.showQuestion = true
@@ -393,15 +413,16 @@ export default {
 			setTimeout(() => {
 				this.section = 1
 				this.showLogo = true
-				setTimeout(() => {
-					this.moveCircle(this.section)
-				}, 200);
+				// setTimeout(() => {
+				this.moveCircle(this.section)
+				// }, 200);
 			}, 200)
 			this.showQuestion = false
 			setTimeout(() => {
 				this.showQuestion = true
 				this.showLogo = false
 			}, 3000);
+			_czc.push(['_trackEvent', softType + '-成功进入活动-' + deviceType]);
 		},
 		moveCircle (index) {
 			if (index === 1) {
@@ -410,9 +431,9 @@ export default {
 			else {
 				this.circleLeft = (parseInt(this.circleLeft.replace('px', '')) + parseInt(this.left.replace('px', '')) + 12.5 + 4.5) + 'px'
 			}
-			setTimeout(() => {
-				document.getElementById('circle_' + index).className = 'circle active'
-			}, 1000);
+			// setTimeout(() => {
+			document.getElementById('circle_' + index).className = 'circle active'
+			// }, 1);
 		}
 	},
 	computed: mapState({
@@ -586,6 +607,7 @@ export default {
 			right 16.5px
 			z-index 10
 			.index-copyright
+				z-index 11
 				display flex
 				align-items center
 				position absolute
@@ -619,7 +641,7 @@ export default {
 					font-weight 700
 					text-align justify
 				.paper-info 
-					margin-top 43%
+					margin-top 45%
 					.get-paper
 						display flex
 						align-items center
@@ -679,6 +701,7 @@ export default {
 				top 0
 				left 0
 				transition all .8s linear
+				z-index 3
 			.circle-list
 				display flex
 				margin-bottom -9px
@@ -688,8 +711,10 @@ export default {
 					background-color #ffffff
 					border: solid 2px #000000
 					border-radius 50%
+					z-index 2
 					&.active
 						background-color #ff8f45
+						// z-index 10
 			.line
 				border: solid 1px #000000
 </style>

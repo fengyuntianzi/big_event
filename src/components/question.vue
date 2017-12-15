@@ -1,36 +1,35 @@
 <template>
 	<div class="question">
-		<transition-group name="fadeIn">
-			<div v-for="(item, index) in nowQuestion" v-if="index === nowIndex" class="item" :key="index">
-				<div class="title">
-					<!-- <img src="../assets/images/radio-paper.png" alt="" class="paper"> -->
-					<div class="paper" :class="{multipaper : type===2, read : type === 4}"></div>
-					<div class="subject" :class="{multipaper : type===2, judge : type===3, read : type === 4}" v-show="type !== 4">{{item.question}}</div>
-					<div class="subject" v-show="type === 4" :class="{read : type === 4}">
-						<div class="desc">{{item.question.split(' ')[0]}}</div>
-						<div class="ques">{{item.question.split(' ')[1]}}</div>
-					</div>
-				</div>
-				<div class="option-section" :class="{read : type === 4, judge : type===3}">
-					<div v-for="(optionItem,optionIndex) in item.options" class='option' 
-							@click="select(index, optionIndex)" :class="{short : optionItem.answer.length <= 4,multipaper : type===2,read : type === 4,
-							 active : optionItem.isActive && type !==3, judge : type===3, judgeActive : optionItem.isActive && type===3}">
-						<div class="select">{{changeToOption(optionIndex)}}</div>
-						<div class="answer" :class="{correct : type === 3, error : type===3 && optionIndex===1}">
-							{{type === 3 ? '' : optionItem.answer}}</div>
-					</div>
-				</div>
-				<div class="confirm" v-show="type === 2 || (type === 4 && nowIndex===maxIndex)" :class="{read : type === 4}">
-					<div @click="confirm" class="sure" :class="{scale : clickedConfirm}">{{(type === 4 && nowIndex===maxIndex) ? '交卷':'确认'}}</div>
-					<img src="../assets/images/jt.png" width="49" height="34" @click="confirm" 
-						:class="{scale : clickedConfirm}">
+		<div v-for="(item, index) in nowQuestion" v-show="index === nowIndex" class="item" :key="index" :class="{hidden : index!==nowIndex, ios9 : isIos9}">
+			<div class="title">
+				<!-- <img src="../assets/images/radio-paper.png" alt="" class="paper"> -->
+				<div class="paper" :class="{multipaper : type===2, read : type === 4}"></div>
+				<div class="subject" :class="{multipaper : type===2, judge : type===3, read : type === 4}" v-show="type !== 4">{{item.question}}</div>
+				<div class="subject" v-show="type === 4" :class="{read : type === 4}">
+					<div class="desc">{{item.question.split(' ')[0]}}</div>
+					<div class="ques">{{item.question.split(' ')[1]}}</div>
 				</div>
 			</div>
-		</transition-group>
+			<!-- <div class="test">测试</div> -->
+			<div class="option-section" :class="{read : type === 4, judge : type===3}">
+				<div v-for="(optionItem,optionIndex) in item.options" class='option' 
+						@click="select(index, optionIndex)" :class="{short : optionItem.answer.length <= 4,multipaper : type===2,read : type === 4,
+							active : optionItem.isActive && type !==3, judge : type===3, judgeActive : optionItem.isActive && type===3}">
+					<div class="select">{{changeToOption(optionIndex)}}</div>
+					<div class="answer" :class="{correct : type === 3, error : type===3 && optionIndex===1}">
+						{{type === 3 ? '' : optionItem.answer}}</div>
+				</div>
+			</div>
+			<div class="confirm" v-show="type === 2 || (type === 4 && nowIndex===maxIndex)" :class="{read : type === 4}">
+				<div @click="confirm" class="sure" :class="{scale : clickedConfirm}">{{(type === 4 && nowIndex===maxIndex) ? '交卷':'确认'}}</div>
+				<img src="../assets/images/jt.png" width="49" height="34" @click="confirm" 
+					:class="{scale : clickedConfirm}">
+			</div>
+		</div>
 	</div>
 </template>
 <script>
-// import store from '../store/store'
+import device from '../common/utils/device.js'
 const RadioScore = 4
 const MultiScore = 6
 const JudgeScore = 4
@@ -39,6 +38,22 @@ let resultShareData = {
 	title: '我的2017大事件考卷得分为xx分！',
 	text: '2017大事件全国统一考卷，鸡年你白过了吗',
 	img: 'http://mobile.51wnl.com/temporary/event2017/static/img/share.png'
+}
+/*eslint-disable no-undef*/
+// 埋点
+let deviceType
+let softType
+if (device.wnl) {
+	softType = 'wnl'
+}
+if (device.weixin) {
+	softType = 'wx'
+}
+if (device.ios) {
+	deviceType = 'ios'
+}
+else {
+	deviceType = 'android'
 }
 export default {
 	data () {
@@ -49,7 +64,8 @@ export default {
 			multiselect: [],
 			optionClick: false,
 			clickedConfirm: false,
-			radioOptionSelected: false
+			radioOptionSelected: false,
+			isIos9: false
 		}
 	},
 	components: {
@@ -67,6 +83,11 @@ export default {
 		}
 	},
 	created () {
+		if (device.ios) {
+			if (device.osVersion.substring(0, 1) === '9') {
+				this.isIos9 = true
+			}
+		}
 		this.nowQuestion = this.questions[this.type - 1]
 		this.maxIndex = this.questions[this.type - 1].length - 1
 	},
@@ -132,19 +153,12 @@ export default {
 			else {
 				if (this.type === 4) {
 					console.log('交卷')
-					// console.log('得分：' + this.$store.state.userScore)
-					// localStorage.setItem('userscore', this.$store.state.userScore)
-					// let data = {
-					// 	title: resultShareData.title.replace('xx', that.$store.state.userScore),
-					// 	text: resultShareData.text,
-					// 	imgUrl: resultShareData.img,
-					// 	url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + that.$store.state.userScore + '&name=' + that.$store.state.userName
-					// }
+					_czc.push(['_trackEvent', softType + '-交卷点击-' + deviceType]);
 					window.wnlui.wxShare({
 						title: '我的2017大事件考卷得分为' + that.$store.state.userScore + '分！',
 						text: '2017大事件全国统一考卷，鸡年你白过了吗',
 						imgUrl: resultShareData.img,
-						url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + that.$store.state.userScore + '&name=' + encodeURIComponent(that.$store.state.userName)
+						url: 'https://mobile.51wnl.com/temporary/event2017/index.html?score=' + that.$store.state.userScore + '&name=' + encodeURIComponent(that.$store.state.userName) + '&isShare=true'
 					})
 					// alert(JSON.stringify(data))
 				}
@@ -171,9 +185,19 @@ export default {
 			// 多选题
 			if (this.type === 2) {
 				option.isActive = !option.isActive
+				_czc.push(['_trackEvent', softType + '-多选题' + (num1 + 1) + '点击-' + deviceType]);
 			}
 			// 单选题
 			else {
+				if (this.type === 1) {
+					_czc.push(['_trackEvent', softType + '-单选题' + (num1 + 1) + '点击-' + deviceType]);
+				}
+				if (this.type === 3) {
+					_czc.push(['_trackEvent', softType + '-判断题' + (num1 + 1) + '点击-' + deviceType]);
+				}
+				if (this.type === 4) {
+					_czc.push(['_trackEvent', softType + '-阅读题' + (num1 + 1) + '点击-' + deviceType]);
+				}
 				if (this.radioOptionSelected) {
 					return
 				}
@@ -240,12 +264,33 @@ export default {
 </script>
 <style lang="stylus" scoped rel="stylesheet/stylus">
 	.question
+		position relative
 		.item
-			&.fadeIn-enter-active
-				transform translateX(0)
-				transition all .7s cubic-bezier(0.22, 0.61, 0.36, 1)
-			&.fadeIn-enter,&.fadeIn-leave-active
-				transform translateX(500px)
+			position absolute
+			width calc(100% - 10px)
+			top 0
+			left 5px
+			&.hidden
+				display none
+			animation moveX .7s ease-in-out forwards
+			&.ios9
+				animation moveIOS9 .7s ease-in-out forwards
+			@keyframes moveX {
+				0% {
+					transform translate3d(500px,0,0)
+				}
+				100% {
+					transform translate3d(0,0,0)
+				}
+			}
+			@keyframes moveIOS9 {
+				0% {
+					left 100%
+				}
+				100% {
+					left 0
+				}
+			}
 			.title
 				position relative
 				font-size 17px
@@ -303,6 +348,18 @@ export default {
 							font-size 22px
 							margin-top 5px
 						}
+			// .test
+			// 	animation kkk 2s ease-in forwards
+			// 	@keyframes kkk {
+			// 		0% {
+			// 			// transform translate3d(500px,0,0)
+			// 			transform rotate(35deg)
+			// 		}
+			// 		100% {
+			// 			// transform translate3d(0,0,0)
+			// 			transform rotate(85deg)
+			// 		}
+			// 	}
 			.option-section
 				margin -20px 40px 0 39px
 				&.read
@@ -369,6 +426,8 @@ export default {
 					transition all .5s ease
 					&.scale
 						transform scale(.5)
+				.sure
+					height 32px
 /* iphone4、5*/
 @media screen and (max-width: 325px)
 	.question .item .title .subject
